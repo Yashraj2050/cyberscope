@@ -37,18 +37,16 @@ To test the macOS build in an environment mimicking a fresh machine:
 ```
 
 ## 6. Windows Build Strategy
-Native cross-compilation of PyInstaller and Tauri from macOS to Windows is unreliable.
-**Recommended Workflow:**
-1. Provision a GitHub Actions workflow with `runs-on: windows-latest`.
-2. Step 1: Install Python and node.
-3. Step 2: Create a venv, install requirements, and run PyInstaller:
-   `pyinstaller --name engine --onefile --add-data "datasets\demo\*.json:datasets\demo" main.py`
-4. Step 3: Copy `dist/engine.exe` to `src-tauri/bin/engine-x86_64-pc-windows-msvc.exe`.
-5. Step 4: Run `npm run tauri build`.
-6. Step 5: Upload the generated `.msi` or `.exe` as a GitHub release artifact.
+Windows builds are produced through GitHub Actions on a native Windows runner.
+
+Native cross-compilation of PyInstaller and Tauri from macOS to Windows is unreliable, therefore the repository contains a `.github/workflows/windows-build.yml` file.
+This workflow natively tests the engine, packages the PyInstaller sidecar (`engine-x86_64-pc-windows-msvc.exe`), builds the React frontend, and uses the `tauri-apps/tauri-action` to construct the final Windows application.
+
+Only after a successful run may the release status become VERIFIED.
 
 ## 7. CI Build Instructions
-Use the official `tauri-apps/tauri-action` on GitHub Actions combined with Python setup steps for the sidecar build.
+The CI workflow automatically triggers on pushes to the `master` branch.
+The output generated `.msi` and `.exe` artifacts are uploaded to the GitHub Actions run via the `upload-artifact` action.
 
 ## 8. Offline Requirements
 The application requires absolutely NO internet connection.
