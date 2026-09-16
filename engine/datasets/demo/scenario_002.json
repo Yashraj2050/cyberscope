@@ -1,0 +1,51 @@
+{
+  "scenario_id": "scenario_002.json",
+  "scenario_name": "No Gap Detected",
+  "description": "Suspicious process activity followed by credential-access-related behavior.",
+  "category": "Credential Access",
+  "synthetic": true,
+  "observed_events": [
+    {
+      "event_id": "EVT-010",
+      "timestamp": "2026-08-21T10:00:00Z",
+      "host_id": "HOST-X",
+      "user_id": "admin",
+      "process_id": "P-500",
+      "event_type": "ProcessCreate",
+      "process_name": "wmic.exe",
+      "source": "Sysmon",
+      "technique_id": "T1047",
+      "technique_name": "Windows Management Instrumentation"
+    },
+    {
+      "event_id": "EVT-012",
+      "timestamp": "2026-08-21T10:15:00Z",
+      "host_id": "HOST-X",
+      "user_id": "admin",
+      "process_id": "P-505",
+      "event_type": "FileCreate",
+      "process_name": "unknown.exe",
+      "source": "Sysmon",
+      "metadata": {
+        "file_path": "C:\\Windows\\Temp\\lsass.dmp"
+      }
+    }
+  ],
+  "ground_truth_events": [
+    {
+      "event_id": "EVT-011",
+      "timestamp": "2026-08-21T10:10:00Z",
+      "host_id": "HOST-X",
+      "user_id": "admin",
+      "process_id": "P-500",
+      "event_type": "ProcessAccess",
+      "process_name": "wmic.exe",
+      "source": "Sysmon",
+      "metadata": {
+        "target_process": "lsass.exe"
+      },
+      "technique_id": "T1003.001",
+      "technique_name": "LSASS Memory"
+    }
+  ]
+}

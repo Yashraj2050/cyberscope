@@ -1,0 +1,70 @@
+{
+  "scenario_id": "scenario_005.json",
+  "scenario_name": "No Gap Detected",
+  "description": "Several correlated events across users, hosts and processes causing multiple gaps.",
+  "category": "Multi-Stage",
+  "synthetic": true,
+  "observed_events": [
+    {
+      "event_id": "EVT-040",
+      "timestamp": "2026-08-21T13:00:00Z",
+      "host_id": "HOST-DEV",
+      "user_id": "dev1",
+      "process_id": "P-1000",
+      "event_type": "ProcessCreate",
+      "process_name": "ssh",
+      "source": "Sysmon",
+      "technique_id": "T1021.004",
+      "technique_name": "SSH"
+    },
+    {
+      "event_id": "EVT-042",
+      "timestamp": "2026-08-21T13:15:00Z",
+      "host_id": "HOST-PROD",
+      "user_id": "dev1",
+      "process_id": "P-2000",
+      "event_type": "FileCreate",
+      "process_name": "curl",
+      "source": "Sysmon",
+      "metadata": {
+        "file_path": "/tmp/payload.sh"
+      },
+      "technique_id": "T1105",
+      "technique_name": "Ingress Tool Transfer"
+    },
+    {
+      "event_id": "EVT-044",
+      "timestamp": "2026-08-21T13:20:00Z",
+      "host_id": "HOST-PROD",
+      "user_id": "dev1",
+      "process_id": "P-2010",
+      "event_type": "NetworkConnect",
+      "process_name": "nc",
+      "source": "Sysmon",
+      "destination_ip": "198.51.100.22",
+      "technique_id": "T1090",
+      "technique_name": "Proxy"
+    }
+  ],
+  "ground_truth_events": [
+    {
+      "event_id": "EVT-041",
+      "timestamp": "2026-08-21T13:05:00Z",
+      "host_id": "HOST-PROD",
+      "user_id": "dev1",
+      "process_id": "P-1999",
+      "event_type": "UserLogin",
+      "source": "AuthLog"
+    },
+    {
+      "event_id": "EVT-043",
+      "timestamp": "2026-08-21T13:17:00Z",
+      "host_id": "HOST-PROD",
+      "user_id": "dev1",
+      "process_id": "P-2005",
+      "event_type": "ProcessCreate",
+      "process_name": "sh",
+      "source": "Sysmon"
+    }
+  ]
+}

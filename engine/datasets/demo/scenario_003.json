@@ -1,0 +1,48 @@
+{
+  "scenario_id": "scenario_003.json",
+  "scenario_name": "No Gap Detected",
+  "description": "User/session activity followed by persistence-related behavior.",
+  "category": "Persistence",
+  "synthetic": true,
+  "observed_events": [
+    {
+      "event_id": "EVT-020",
+      "timestamp": "2026-08-21T11:00:00Z",
+      "host_id": "HOST-Y",
+      "user_id": "svc_account",
+      "process_id": "P-800",
+      "event_type": "UserLogin",
+      "source": "Windows Event Log",
+      "technique_id": "T1078",
+      "technique_name": "Valid Accounts"
+    },
+    {
+      "event_id": "EVT-022",
+      "timestamp": "2026-08-21T11:20:00Z",
+      "host_id": "HOST-Y",
+      "user_id": "svc_account",
+      "process_id": "P-810",
+      "event_type": "RegistryValueSet",
+      "process_name": "reg.exe",
+      "source": "Sysmon",
+      "metadata": {
+        "registry_key": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater"
+      },
+      "technique_id": "T1547.001",
+      "technique_name": "Registry Run Keys / Startup Folder"
+    }
+  ],
+  "ground_truth_events": [
+    {
+      "event_id": "EVT-021",
+      "timestamp": "2026-08-21T11:10:00Z",
+      "host_id": "HOST-Y",
+      "user_id": "svc_account",
+      "process_id": "P-810",
+      "parent_process_id": "P-800",
+      "event_type": "ProcessCreate",
+      "process_name": "reg.exe",
+      "source": "Sysmon"
+    }
+  ]
+}
