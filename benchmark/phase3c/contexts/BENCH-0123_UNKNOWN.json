@@ -1,0 +1,291 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0123",
+  "investigation_id": "INV-BENCH-0123",
+  "gap_id": "GAP-5CCE5B77",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-123-00",
+    "timestamp": "2026-08-25T13:24:47Z",
+    "host_id": "HOST-CHARLIE",
+    "user_id": "USER-1",
+    "process_id": "PROC-7643",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1059.003",
+    "technique_name": "Benchmark T1059.003",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-123-02",
+    "timestamp": "2026-08-25T13:53:43Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-1",
+    "process_id": "PROC-7643",
+    "parent_process_id": null,
+    "event_type": "RegistryModification",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.001",
+    "technique_name": "Benchmark T1021.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.7,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": true,
+    "user_continuity": false,
+    "process_relationship": false,
+    "technique_transition": true,
+    "behavioral_prerequisite": true
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-45D6F957",
+      "gap_id": "GAP-5CCE5B77",
+      "event_type": "ProcessAccess",
+      "technique_id": "T1003.001",
+      "technique_name": "OS Credential Dumping: LSASS Memory",
+      "description": "A process (e.g., PowerShell or spawned tool) accesses LSASS memory to extract plaintext credentials or NTLM hashes. These credentials are subsequently used to authenticate on remote systems via SMB or WinRM.",
+      "required_preconditions": [
+        "Execution capability on the host (PowerShell or similar)",
+        "Administrator or SYSTEM privilege to access LSASS process memory",
+        "SeDebugPrivilege or equivalent enabled for the calling process"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1736s \u2265 30s threshold)",
+        "Consistent user context (USER-1) on both sides",
+        "Same process (cmd.exe) active on both sides of gap",
+        "Technique stage (3) correctly bridges the gap (2 \u2192 3 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate expected on source host",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.9,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.85,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-865BA360",
+      "gap_id": "GAP-5CCE5B77",
+      "event_type": "ProcessAccess",
+      "technique_id": "T1003",
+      "technique_name": "OS Credential Dumping",
+      "description": "Generic OS credential dumping activity. The attacker uses an execution foothold to access stored credentials (registry, memory, or files) before authenticating to a remote host.",
+      "required_preconditions": [
+        "Execution capability on the host",
+        "Elevated privileges sufficient to access credential stores"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1736s \u2265 30s threshold)",
+        "Consistent user context (USER-1) on both sides",
+        "Same process (cmd.exe) active on both sides of gap",
+        "Technique stage (3) correctly bridges the gap (2 \u2192 3 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate expected on source host",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.9,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.85,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-1FC5ED14",
+      "gap_id": "GAP-5CCE5B77",
+      "event_type": "NetworkAccess",
+      "technique_id": "T1558.003",
+      "technique_name": "Steal or Forge Kerberos Tickets: Kerberoasting",
+      "description": "The attacker requests Kerberos service tickets for domain accounts and extracts them for offline cracking. Cracked credentials are then used for lateral movement.",
+      "required_preconditions": [
+        "Active domain user session on a domain-joined host",
+        "Network access to a domain controller",
+        "Target service accounts must have SPNs registered"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1736s \u2265 30s threshold)",
+        "Consistent user context (USER-1) on both sides",
+        "Same process (cmd.exe) active on both sides of gap"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate expected on source host",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.9,
+      "technique_score": 0.5,
+      "graph_score": 0.55,
+      "candidate_score": 0.7,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 3
+    },
+    {
+      "candidate_id": "CAND-POS-004d7bd5",
+      "gap_id": "GAP-5CCE5B77",
+      "event_type": "SyntheticAccess",
+      "technique_id": "T1569.002",
+      "technique_name": "Benchmark T1569.002",
+      "description": "Positive candidate for benchmark variety",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (1736s \u2265 30s threshold)",
+        "Consistent user context (USER-1) on both sides",
+        "Same process (cmd.exe) active on both sides of gap"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate expected on source host",
+        "Technique stage (4) is at boundary rather than bridging the gap",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.9,
+      "technique_score": 0.5,
+      "graph_score": 0.55,
+      "candidate_score": 0.7,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 3
+    }
+  ],
+  "candidate_scores": {
+    "CAND-45D6F957": 0.85,
+    "CAND-865BA360": 0.85,
+    "CAND-1FC5ED14": 0.7,
+    "CAND-POS-004d7bd5": 0.7
+  },
+  "evidence": [
+    {
+      "reference": "GAP-5CCE5B77-SUP-001",
+      "fact": "[temporal] Gap window (1736.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-SUP-002",
+      "fact": "[user] User context consistent across gap (USER-1)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-SUP-003",
+      "fact": "[process] Same process (cmd.exe) active across gap",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-SUP-004",
+      "fact": "[technique] Candidate technique stage (3) correctly bridges gap (2 \u2192 3 \u2192 4)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-SUP-005",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-MIS-006",
+      "fact": "[host] Host changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate origin host is uncertain",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-5CCE5B77"
+    },
+    {
+      "reference": "GAP-5CCE5B77-CON-008",
+      "fact": "Top-2 candidates (T1003.001: 0.8500, T1003: 0.8500) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates.",
+      "source_type": "contradictory_evidence",
+      "source_id": "GAP-5CCE5B77"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-49A3CF7C",
+    "gap_id": "GAP-5CCE5B77",
+    "status": "UNKNOWN",
+    "candidate_id": "CAND-45D6F957",
+    "event_type": "ProcessAccess",
+    "technique_id": "T1003.001",
+    "technique_name": "OS Credential Dumping: LSASS Memory",
+    "candidate_score": 0.85,
+    "verification_score": 0.875,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (1736.0s) is sufficient for candidate execution",
+      "[user] User context consistent across gap (USER-1)",
+      "[process] Same process (cmd.exe) active across gap",
+      "[technique] Candidate technique stage (3) correctly bridges gap (2 \u2192 3 \u2192 4)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[host] Host changes across gap (HOST-CHARLIE \u2192 HOST-BRAVO); candidate origin host is uncertain",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [
+      "Top-2 candidates (T1003.001: 0.8500, T1003: 0.8500) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates."
+    ],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "UNKNOWN",
+      "user": "PASS",
+      "process": "PASS",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Multiple candidates have comparable evidence support. Top-2 candidates (T1003.001: 0.8500, T1003: 0.8500) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates. Classification withheld: UNKNOWN.",
+    "created_at": "2026-09-16T12:59:38.483887Z"
+  },
+  "classification": "UNKNOWN",
+  "knowledge_context": "No specific local knowledge found for transition NetworkConnection->RegistryModification.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.483993+00:00",
+    "seed": 42
+  }
+}

@@ -615,12 +615,14 @@ class EvidenceVerifier:
             )
 
         # Check if any window event is at a stage that contradicts the candidate
+        next_stage = TECHNIQUE_STAGE_MAP.get(next_event.technique_id or "")
         for we in window_events:
             we_stage = TECHNIQUE_STAGE_MAP.get(we.technique_id or "")
             if (
                 cand_stage is not None
                 and we_stage is not None
-                and we_stage >= next_event.technique_id  # proxy: advanced stage
+                and next_stage is not None
+                and we_stage >= next_stage  # proxy: advanced stage
             ):
                 # More conservative: if stage is ahead of the candidate
                 if we_stage > cand_stage:

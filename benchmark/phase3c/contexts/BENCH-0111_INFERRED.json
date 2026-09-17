@@ -1,0 +1,174 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0111",
+  "investigation_id": "INV-BENCH-0111",
+  "gap_id": "GAP-4D85DB45",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-111-01",
+    "timestamp": "2026-08-25T01:33:11Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-2",
+    "process_id": "PROC-6050",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-111-03",
+    "timestamp": "2026-08-25T02:15:47Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-2",
+    "process_id": "PROC-6572",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003",
+    "technique_name": "Benchmark T1003",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": false,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-POS-db462bf0",
+      "gap_id": "GAP-4D85DB45",
+      "event_type": "SyntheticAccess",
+      "technique_id": "T1059.003",
+      "technique_name": "Benchmark T1059.003",
+      "description": "Positive candidate for benchmark variety",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (2556s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-ALPHA)",
+        "Consistent user context (USER-2) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 3)"
+      ],
+      "contradictory_features": [
+        "No direct process lineage between PROC-6050 and PROC-6572",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.9025,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-POS-db462bf0": 0.9025
+  },
+  "evidence": [
+    {
+      "reference": "GAP-4D85DB45-SUP-001",
+      "fact": "[temporal] Gap window (2556.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-SUP-002",
+      "fact": "[host] Host context consistent across gap (HOST-ALPHA)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-SUP-003",
+      "fact": "[user] User context consistent across gap (USER-2)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-SUP-004",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-SUP-005",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-MIS-006",
+      "fact": "[process] No direct process lineage between PROC-6050 and PROC-6572",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-4D85DB45"
+    },
+    {
+      "reference": "GAP-4D85DB45-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-4D85DB45"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-314E87B9",
+    "gap_id": "GAP-4D85DB45",
+    "status": "INFERRED",
+    "candidate_id": "CAND-POS-db462bf0",
+    "event_type": "SyntheticAccess",
+    "technique_id": "T1059.003",
+    "technique_name": "Benchmark T1059.003",
+    "candidate_score": 0.9025,
+    "verification_score": 0.875,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (2556.0s) is sufficient for candidate execution",
+      "[host] Host context consistent across gap (HOST-ALPHA)",
+      "[user] User context consistent across gap (USER-2)",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[process] No direct process lineage between PROC-6050 and PROC-6572",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "PASS",
+      "user": "PASS",
+      "process": "UNKNOWN",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Candidate Benchmark T1059.003 (Evidence Support Score: 0.9025) passed 5/7 verification checks (verification score: 0.8750 \u2265 0.7). 2 check(s) had insufficient evidence but no contradictions were found. Classification: INFERRED. Note: INFERRED does not mean the event definitely occurred.",
+    "created_at": "2026-09-16T12:59:38.481007Z"
+  },
+  "classification": "INFERRED",
+  "knowledge_context": "No specific local knowledge found for transition ProcessExecution->NetworkConnection.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.481107+00:00",
+    "seed": 42
+  }
+}

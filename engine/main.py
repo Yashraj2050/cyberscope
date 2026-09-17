@@ -59,9 +59,10 @@ def load_scenario(filename: str = "scenario_001.json"):
             
     return events
 
-@app.get("/api/health")
-def health():
-    return {"status": "ok", "message": "CyberScope Engine is running"}
+from api import health_router, cases_router
+
+app.include_router(health_router, prefix="/api")
+app.include_router(cases_router, prefix="/api/v1/cases")
 
 @app.get("/api/v1/events", response_model=List[CyberEvent])
 def get_events():
@@ -75,6 +76,8 @@ from pydantic import BaseModel as _BaseModel
 
 class ScenarioRequest(_BaseModel):
     scenario: str = "scenario_001.json"
+    ranker_mode: str = "DETERMINISTIC"
+    hybrid_alpha: float = 0.70
 
 @app.post("/api/v1/events", response_model=List[CyberEvent])
 def post_events(body: ScenarioRequest):
@@ -223,14 +226,17 @@ def detect_gaps(body: ScenarioRequest):
 # -----------------------------------------------------------------------
 
 from pydantic import BaseModel as _CandBase
-from typing import Any as _Any
+from typing import Any as _Any, Optional
+
+from models.domain import AnalysisMetadata
 
 class GapWithCandidates(_CandBase):
     gap: ReconstructionGap
     candidates: List[ReconstructionCandidate]
+    analysis_metadata: Optional[AnalysisMetadata] = None
 
 
-def _run_full_pipeline(scenario_filename: str) -> List[GapWithCandidates]:
+def _run_full_pipeline(scenario_filename: str, ranker_mode: str = "DETERMINISTIC", hybrid_alpha: float = 0.70) -> List[GapWithCandidates]:
     """
     Shared helper: load observed events → build graph → detect gaps
     → generate candidates → score candidates.
@@ -245,12 +251,30 @@ def _run_full_pipeline(scenario_filename: str) -> List[GapWithCandidates]:
     gaps = ReconstructionGapDetector().detect(events, graph)
     generator = CandidateGenerator()
     scorer = CandidateScorer()
+    
+    from ml.predictor import CandidateRanker, RankingContext
+    ranker = CandidateRanker()
+    rank_ctx = RankingContext(mode=ranker_mode, alpha=hybrid_alpha)
 
     results: List[GapWithCandidates] = []
+    
+    meta = AnalysisMetadata(
+        ranker_mode=rank_ctx.effective_mode,
+        hybrid_alpha=rank_ctx.hybrid_alpha,
+        ml_model_available=rank_ctx.ml_model_available,
+        ml_model_version=rank_ctx.model_version,
+        ml_feature_schema_version=rank_ctx.feature_schema_version,
+        ml_dataset_version=rank_ctx.dataset_version,
+        ml_inference_timestamp=rank_ctx.inference_timestamp,
+        ml_status=rank_ctx.ml_status,
+        ml_reason_code=rank_ctx.reason_code
+    )
+
     for gap in gaps:
         raw_candidates = generator.generate(gap, events, graph)
         scored = scorer.score_and_rank(raw_candidates, gap, events, graph)
-        results.append(GapWithCandidates(gap=gap, candidates=scored))
+        ranked = ranker.rank(scored, gap, events, rank_ctx)
+        results.append(GapWithCandidates(gap=gap, candidates=ranked, analysis_metadata=meta))
 
     return results
 
@@ -272,7 +296,7 @@ def get_reconstruction_candidates():
     accuracy metric.
     """
     try:
-        return _run_full_pipeline("scenario_001.json")
+        return _run_full_pipeline("scenario_001.json", ranker_mode="DETERMINISTIC", hybrid_alpha=0.70)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -294,7 +318,7 @@ def post_reconstruction_candidates(body: ScenarioRequest):
     if not re.match(r'^[\w\-\.]+\.json$', body.scenario):
         raise HTTPException(status_code=400, detail="Invalid scenario filename.")
     try:
-        return _run_full_pipeline(body.scenario)
+        return _run_full_pipeline(body.scenario, ranker_mode=body.ranker_mode, hybrid_alpha=body.hybrid_alpha)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail=f"Scenario '{body.scenario}' not found.")
     except Exception as e:
@@ -315,10 +339,13 @@ class FullPipelineResult(_PipeBase):
     gap: ReconstructionGap
     candidates: List[ReconstructionCandidate]
     result: ReconstructionResult
+    analysis_metadata: Optional[AnalysisMetadata] = None
 
 
 def _run_full_pipeline_with_verification(
     scenario_filename: str,
+    ranker_mode: str = "DETERMINISTIC",
+    hybrid_alpha: float = 0.70
 ) -> List[FullPipelineResult]:
     """
     Complete reconstruction pipeline:
@@ -342,16 +369,35 @@ def _run_full_pipeline_with_verification(
     generator = CandidateGenerator()
     scorer    = CandidateScorer()
     verifier  = EvidenceVerifier()
+    
+    from ml.predictor import CandidateRanker, RankingContext
+    ranker = CandidateRanker()
+    rank_ctx = RankingContext(mode=ranker_mode, alpha=hybrid_alpha)
 
     output: List[FullPipelineResult] = []
+    
+    meta = AnalysisMetadata(
+        ranker_mode=rank_ctx.effective_mode,
+        hybrid_alpha=rank_ctx.hybrid_alpha,
+        ml_model_available=rank_ctx.ml_model_available,
+        ml_model_version=rank_ctx.model_version,
+        ml_feature_schema_version=rank_ctx.feature_schema_version,
+        ml_dataset_version=rank_ctx.dataset_version,
+        ml_inference_timestamp=rank_ctx.inference_timestamp,
+        ml_status=rank_ctx.ml_status,
+        ml_reason_code=rank_ctx.reason_code
+    )
+
     for gap in gaps:
         candidates = generator.generate(gap, events, graph)
         scored     = scorer.score_and_rank(candidates, gap, events, graph)
-        rec_result = verifier.verify(gap, scored, events, graph)
+        ranked     = ranker.rank(scored, gap, events, rank_ctx)
+        rec_result = verifier.verify(gap, ranked, events, graph)
         output.append(FullPipelineResult(
             gap=gap,
-            candidates=scored,
+            candidates=ranked,
             result=rec_result,
+            analysis_metadata=meta
         ))
     return output
 
@@ -372,7 +418,7 @@ def get_reconstruction_verify():
     not calibrated probabilities.
     """
     try:
-        return _run_full_pipeline_with_verification("scenario_001.json")
+        return _run_full_pipeline_with_verification("scenario_001.json", ranker_mode="DETERMINISTIC", hybrid_alpha=0.70)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -393,7 +439,7 @@ def post_reconstruction_verify(body: ScenarioRequest):
     if not re.match(r'^[\w\-\.]+\.json$', body.scenario):
         raise HTTPException(status_code=400, detail="Invalid scenario filename.")
     try:
-        return _run_full_pipeline_with_verification(body.scenario)
+        return _run_full_pipeline_with_verification(body.scenario, ranker_mode=body.ranker_mode, hybrid_alpha=body.hybrid_alpha)
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
@@ -402,6 +448,113 @@ def post_reconstruction_verify(body: ScenarioRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# -----------------------------------------------------------------------
+# Local LLM Integration
+# -----------------------------------------------------------------------
+
+from llm import get_llm_provider, InvestigationLLMContext, EvidenceFact, InvestigationContextBuilder, HallucinationGuardrail
+from llm.audit import log_llm_request
+import time
+
+@app.get("/api/v1/llm/status", summary="Get Local LLM status")
+def get_llm_status():
+    try:
+        provider = get_llm_provider()
+        return provider.get_status()
+    except Exception as e:
+        return {
+            "enabled": False,
+            "provider": None,
+            "model_loaded": False,
+            "model_version": None,
+            "offline": True,
+            "error": str(e)
+        }
+
+@app.post("/api/v1/investigations/{case_id}/ai/explain", summary="Generate advisory explanation using Local LLM")
+def explain_investigation(case_id: str):
+    """
+    Given a case_id (treated as scenario filename for now), run deterministic pipeline,
+    build the evidence context, and query the local LLM for a structured advisory explanation.
+    """
+    import re
+    safe_scenario = case_id if case_id.endswith(".json") else f"{case_id}.json"
+    if not re.match(r'^[\w\-\.]+\.json$', safe_scenario):
+        raise HTTPException(status_code=400, detail="Invalid case/scenario ID.")
+        
+    start_time = time.time()
+    try:
+        results = _run_full_pipeline_with_verification(safe_scenario)
+        if not results:
+            raise HTTPException(status_code=404, detail="No investigation results found.")
+            
+        result = results[0]
+        
+        # Build strict context
+        builder = InvestigationContextBuilder()
+        ctx = builder.build(
+            case_id=case_id,
+            investigation_id=f"INV-{case_id}",
+            gap_result=result.gap.model_dump(),
+            verification_result=result.result.model_dump(),
+            candidates=[c.model_dump() for c in result.candidates]
+        )
+        
+        provider = get_llm_provider()
+        status = provider.get_status()
+        if not status.get("available", False):
+            raise HTTPException(status_code=503, detail="LLM_UNAVAILABLE: Configured model is missing or invalid.")
+            
+        llm_response = provider.generate(ctx, "Explain the investigation outcome based solely on the provided context.")
+        
+        guardrail = HallucinationGuardrail()
+        validated_response = guardrail.validate(llm_response, ctx)
+        
+        latency = time.time() - start_time
+        
+        # Audit logging
+        log_llm_request(
+            case_id=ctx.case_id,
+            investigation_id=ctx.investigation_id,
+            gap_id=ctx.gap_id,
+            model_id=status.get("model_id", "unknown"),
+            model_hash=status.get("model_hash", "unknown"),
+            context_schema_version=ctx.context_schema_version,
+            latency=latency,
+            output_validation_status="VALID",
+            evidence_references=validated_response.evidence_references
+        )
+        
+        return validated_response.model_dump()
+        
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Scenario '{safe_scenario}' not found.")
+    except Exception as e:
+        latency = time.time() - start_time
+        try:
+            status = get_llm_provider().get_status()
+        except:
+            status = {}
+            
+        log_llm_request(
+            case_id=case_id,
+            investigation_id=f"INV-{case_id}",
+            gap_id="unknown",
+            model_id=status.get("model_id", "unknown"),
+            model_hash=status.get("model_hash", "unknown"),
+            context_schema_version="1.0.0",
+            latency=latency,
+            output_validation_status=f"INVALID: {e}",
+            evidence_references=[]
+        )
+        
+        if "LLM_UNAVAILABLE" in str(e):
+            raise HTTPException(status_code=503, detail=str(e))
+        if "LLM hallucinated evidence reference" in str(e) or "LLM_RESPONSE_INVALID" in str(e):
+            raise HTTPException(status_code=422, detail=f"LLM Parsing/Guardrail Failure: {e}")
+        
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000

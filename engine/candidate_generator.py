@@ -68,6 +68,21 @@ class CandidateBlueprint:
 # It is NOT universally valid for all environments or attack variants.
 # ---------------------------------------------------------------
 
+import json
+import os
+from dataclasses import dataclass, field
+
+@dataclass
+class CandidateBlueprint:
+    technique_id: str
+    technique_name: str
+    event_type: str
+    description: str
+    required_preconditions: List[str] = field(default_factory=list)
+    expected_host_context: str = "same"
+    expected_user_context: str = "same"
+    source_rule_id: str = ""
+
 @dataclass
 class TransitionRule:
     rule_id: str
@@ -76,213 +91,55 @@ class TransitionRule:
     next_technique_ids: Set[str]
     blueprints: List[CandidateBlueprint]
 
+def load_knowledge_base():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    kb_path = os.path.join(base_dir, "knowledge", "transitions.json")
+    with open(kb_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    rules = []
+    for r in data.get("transition_rules", []):
+        bps = []
+        for bp in r.get("blueprints", []):
+            bps.append(CandidateBlueprint(
+                source_rule_id=bp.get("source_rule_id", ""),
+                technique_id=bp["technique_id"],
+                technique_name=bp["technique_name"],
+                event_type=bp["event_type"],
+                description=bp["description"],
+                required_preconditions=bp.get("required_preconditions", []),
+                expected_host_context=bp.get("expected_host_context", "same"),
+                expected_user_context=bp.get("expected_user_context", "same")
+            ))
+        rules.append(TransitionRule(
+            rule_id=r["rule_id"],
+            description=r.get("description", ""),
+            prev_technique_ids=set(r.get("prev_technique_ids", [])),
+            next_technique_ids=set(r.get("next_technique_ids", [])),
+            blueprints=bps
+        ))
+        
+    fallbacks = {}
+    for k, bp_list in data.get("stage_fallback_rules", {}).items():
+        parts = k.split("_")
+        stage_key = (int(parts[0]), int(parts[1]))
+        bps = []
+        for bp in bp_list:
+            bps.append(CandidateBlueprint(
+                source_rule_id=bp.get("source_rule_id", ""),
+                technique_id=bp["technique_id"],
+                technique_name=bp["technique_name"],
+                event_type=bp["event_type"],
+                description=bp["description"],
+                required_preconditions=bp.get("required_preconditions", []),
+                expected_host_context=bp.get("expected_host_context", "same"),
+                expected_user_context=bp.get("expected_user_context", "same")
+            ))
+        fallbacks[stage_key] = bps
+        
+    return rules, fallbacks
 
-TRANSITION_RULES: List[TransitionRule] = [
-    # -------------------------------------------------------
-    # TR-001: Execution → Lateral Movement (Remote Services)
-    # The most common pattern: execution capability (e.g., PowerShell)
-    # is used to dump credentials, which are then used for SMB/WinRM/RDP.
-    # -------------------------------------------------------
-    TransitionRule(
-        rule_id="TR-001",
-        description="Execution to Remote-Service Lateral Movement via Credential Access",
-        prev_technique_ids={
-            "T1059", "T1059.001", "T1059.003", "T1059.005",
-        },
-        next_technique_ids={
-            "T1021", "T1021.001", "T1021.002", "T1021.006",
-            "T1569", "T1569.002",
-        },
-        blueprints=[
-            CandidateBlueprint(
-                source_rule_id="TR-001",
-                technique_id="T1003.001",
-                technique_name="OS Credential Dumping: LSASS Memory",
-                event_type="ProcessAccess",
-                description=(
-                    "A process (e.g., PowerShell or spawned tool) accesses LSASS "
-                    "memory to extract plaintext credentials or NTLM hashes. "
-                    "These credentials are subsequently used to authenticate on "
-                    "remote systems via SMB or WinRM."
-                ),
-                required_preconditions=[
-                    "Execution capability on the host (PowerShell or similar)",
-                    "Administrator or SYSTEM privilege to access LSASS process memory",
-                    "SeDebugPrivilege or equivalent enabled for the calling process",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-            CandidateBlueprint(
-                source_rule_id="TR-001",
-                technique_id="T1003",
-                technique_name="OS Credential Dumping",
-                event_type="ProcessAccess",
-                description=(
-                    "Generic OS credential dumping activity. The attacker uses an "
-                    "execution foothold to access stored credentials (registry, "
-                    "memory, or files) before authenticating to a remote host."
-                ),
-                required_preconditions=[
-                    "Execution capability on the host",
-                    "Elevated privileges sufficient to access credential stores",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-            CandidateBlueprint(
-                source_rule_id="TR-001",
-                technique_id="T1558.003",
-                technique_name="Steal or Forge Kerberos Tickets: Kerberoasting",
-                event_type="NetworkAccess",
-                description=(
-                    "The attacker requests Kerberos service tickets for domain "
-                    "accounts and extracts them for offline cracking. Cracked "
-                    "credentials are then used for lateral movement."
-                ),
-                required_preconditions=[
-                    "Active domain user session on a domain-joined host",
-                    "Network access to a domain controller",
-                    "Target service accounts must have SPNs registered",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-        ],
-    ),
-
-    # -------------------------------------------------------
-    # TR-002: Initial Access → Lateral Movement (large jump)
-    # Attacker pivots to lateral movement without explicit execution events.
-    # Multiple intermediate stages may be missing.
-    # -------------------------------------------------------
-    TransitionRule(
-        rule_id="TR-002",
-        description="Initial Access directly to Lateral Movement — missing execution and credential stages",
-        prev_technique_ids={
-            "T1190", "T1566", "T1566.001", "T1566.002", "T1133",
-        },
-        next_technique_ids={
-            "T1021", "T1021.001", "T1021.002", "T1021.006",
-        },
-        blueprints=[
-            CandidateBlueprint(
-                source_rule_id="TR-002",
-                technique_id="T1059.001",
-                technique_name="Command and Scripting Interpreter: PowerShell",
-                event_type="ProcessCreate",
-                description=(
-                    "A command interpreter (e.g., PowerShell, cmd.exe) was likely "
-                    "executed as an intermediate step to run staging or credential "
-                    "harvesting commands before lateral movement."
-                ),
-                required_preconditions=[
-                    "Initial access established on the host",
-                    "Ability to execute commands (e.g., via exploit or phishing payload)",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-            CandidateBlueprint(
-                source_rule_id="TR-002",
-                technique_id="T1003.001",
-                technique_name="OS Credential Dumping: LSASS Memory",
-                event_type="ProcessAccess",
-                description=(
-                    "Credential dumping likely occurred between initial access and "
-                    "lateral movement. LSASS is a common target after an initial "
-                    "foothold is established."
-                ),
-                required_preconditions=[
-                    "Execution capability established via initial access vector",
-                    "Elevated privileges",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-        ],
-    ),
-
-    # -------------------------------------------------------
-    # TR-003: Execution → Collection/Exfiltration
-    # After code execution, attacker collects data before exfiltration.
-    # -------------------------------------------------------
-    TransitionRule(
-        rule_id="TR-003",
-        description="Execution to Data Exfiltration — missing data staging/collection",
-        prev_technique_ids={
-            "T1059", "T1059.001", "T1059.003",
-        },
-        next_technique_ids={
-            "T1041", "T1486",
-        },
-        blueprints=[
-            CandidateBlueprint(
-                source_rule_id="TR-003",
-                technique_id="T1005",
-                technique_name="Data from Local System",
-                event_type="FileAccess",
-                description=(
-                    "The attacker accesses and stages files from the local system "
-                    "before exfiltration or encryption."
-                ),
-                required_preconditions=[
-                    "Execution capability on the host",
-                    "Read access to target files or directories",
-                ],
-                expected_host_context="same",
-                expected_user_context="same",
-            ),
-        ],
-    ),
-]
-
-
-# ---------------------------------------------------------------
-# STAGE-BASED FALLBACK RULES
-#
-# When no exact technique match exists in TRANSITION_RULES,
-# these stage-range rules provide coarser-grained candidates.
-# They are less precise and should be clearly marked as such.
-# ---------------------------------------------------------------
-
-STAGE_FALLBACK_RULES: Dict[tuple, List[CandidateBlueprint]] = {
-    # Stage jump: Execution (2) → Lateral Movement (4)
-    (2, 4): [
-        CandidateBlueprint(
-            source_rule_id="FALLBACK-2-4",
-            technique_id="T1003",
-            technique_name="OS Credential Dumping",
-            event_type="ProcessAccess",
-            description=(
-                "Generic credential access activity inferred from a technique "
-                "stage jump of 2 (Execution → Lateral Movement). "
-                "[Fallback rule — lower confidence than specific match.]"
-            ),
-            required_preconditions=[
-                "Execution capability on the host",
-                "Elevated privileges",
-            ],
-        ),
-    ],
-    # Stage jump: Initial Access (1) → Lateral Movement (4)
-    (1, 4): [
-        CandidateBlueprint(
-            source_rule_id="FALLBACK-1-4",
-            technique_id="T1059.001",
-            technique_name="Command and Scripting Interpreter: PowerShell",
-            event_type="ProcessCreate",
-            description=(
-                "Execution activity inferred from a large technique stage jump "
-                "(Initial Access → Lateral Movement). "
-                "[Fallback rule — lower confidence than specific match.]"
-            ),
-            required_preconditions=[
-                "Initial access established",
-            ],
-        ),
-    ],
-}
+TRANSITION_RULES, STAGE_FALLBACK_RULES = load_knowledge_base()
 
 # Import stage map to compute stage-based fallback
 from gap_detector import TECHNIQUE_STAGE_MAP

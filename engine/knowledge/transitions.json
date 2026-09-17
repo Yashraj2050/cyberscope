@@ -1,0 +1,139 @@
+{
+    "transition_rules": [
+        {
+            "rule_id": "TR-001",
+            "description": "Execution to Remote-Service Lateral Movement via Credential Access",
+            "prev_technique_ids": ["T1059", "T1059.001", "T1059.003", "T1059.005"],
+            "next_technique_ids": ["T1021", "T1021.001", "T1021.002", "T1021.006", "T1569", "T1569.002"],
+            "blueprints": [
+                {
+                    "source_rule_id": "TR-001",
+                    "technique_id": "T1003.001",
+                    "technique_name": "OS Credential Dumping: LSASS Memory",
+                    "event_type": "ProcessAccess",
+                    "description": "A process (e.g., PowerShell or spawned tool) accesses LSASS memory to extract plaintext credentials or NTLM hashes. These credentials are subsequently used to authenticate on remote systems via SMB or WinRM.",
+                    "required_preconditions": [
+                        "Execution capability on the host (PowerShell or similar)",
+                        "Administrator or SYSTEM privilege to access LSASS process memory",
+                        "SeDebugPrivilege or equivalent enabled for the calling process"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                },
+                {
+                    "source_rule_id": "TR-001",
+                    "technique_id": "T1003",
+                    "technique_name": "OS Credential Dumping",
+                    "event_type": "ProcessAccess",
+                    "description": "Generic OS credential dumping activity. The attacker uses an execution foothold to access stored credentials (registry, memory, or files) before authenticating to a remote host.",
+                    "required_preconditions": [
+                        "Execution capability on the host",
+                        "Elevated privileges sufficient to access credential stores"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                },
+                {
+                    "source_rule_id": "TR-001",
+                    "technique_id": "T1558.003",
+                    "technique_name": "Steal or Forge Kerberos Tickets: Kerberoasting",
+                    "event_type": "NetworkAccess",
+                    "description": "The attacker requests Kerberos service tickets for domain accounts and extracts them for offline cracking. Cracked credentials are then used for lateral movement.",
+                    "required_preconditions": [
+                        "Active domain user session on a domain-joined host",
+                        "Network access to a domain controller",
+                        "Target service accounts must have SPNs registered"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                }
+            ]
+        },
+        {
+            "rule_id": "TR-002",
+            "description": "Initial Access directly to Lateral Movement \u2014 missing execution and credential stages",
+            "prev_technique_ids": ["T1190", "T1566", "T1566.001", "T1566.002", "T1133"],
+            "next_technique_ids": ["T1021", "T1021.001", "T1021.002", "T1021.006"],
+            "blueprints": [
+                {
+                    "source_rule_id": "TR-002",
+                    "technique_id": "T1059.001",
+                    "technique_name": "Command and Scripting Interpreter: PowerShell",
+                    "event_type": "ProcessCreate",
+                    "description": "A command interpreter (e.g., PowerShell, cmd.exe) was likely executed as an intermediate step to run staging or credential harvesting commands before lateral movement.",
+                    "required_preconditions": [
+                        "Initial access established on the host",
+                        "Ability to execute commands (e.g., via exploit or phishing payload)"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                },
+                {
+                    "source_rule_id": "TR-002",
+                    "technique_id": "T1003.001",
+                    "technique_name": "OS Credential Dumping: LSASS Memory",
+                    "event_type": "ProcessAccess",
+                    "description": "Credential dumping likely occurred between initial access and lateral movement. LSASS is a common target after an initial foothold is established.",
+                    "required_preconditions": [
+                        "Execution capability established via initial access vector",
+                        "Elevated privileges"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                }
+            ]
+        },
+        {
+            "rule_id": "TR-003",
+            "description": "Execution to Data Exfiltration \u2014 missing data staging/collection",
+            "prev_technique_ids": ["T1059", "T1059.001", "T1059.003"],
+            "next_technique_ids": ["T1041", "T1486"],
+            "blueprints": [
+                {
+                    "source_rule_id": "TR-003",
+                    "technique_id": "T1005",
+                    "technique_name": "Data from Local System",
+                    "event_type": "FileAccess",
+                    "description": "The attacker accesses and stages files from the local system before exfiltration or encryption.",
+                    "required_preconditions": [
+                        "Execution capability on the host",
+                        "Read access to target files or directories"
+                    ],
+                    "expected_host_context": "same",
+                    "expected_user_context": "same"
+                }
+            ]
+        }
+    ],
+    "stage_fallback_rules": {
+        "2_4": [
+            {
+                "source_rule_id": "FALLBACK-2-4",
+                "technique_id": "T1003",
+                "technique_name": "OS Credential Dumping",
+                "event_type": "ProcessAccess",
+                "description": "Generic credential access activity inferred from a technique stage jump of 2 (Execution \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+                "required_preconditions": [
+                    "Execution capability on the host",
+                    "Elevated privileges"
+                ],
+                "expected_host_context": "same",
+                "expected_user_context": "same"
+            }
+        ],
+        "1_4": [
+            {
+                "source_rule_id": "FALLBACK-1-4",
+                "technique_id": "T1059.001",
+                "technique_name": "Command and Scripting Interpreter: PowerShell",
+                "event_type": "ProcessCreate",
+                "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+                "required_preconditions": [
+                    "Initial access established"
+                ],
+                "expected_host_context": "same",
+                "expected_user_context": "same"
+            }
+        ]
+    }
+}

@@ -1,0 +1,217 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0117",
+  "investigation_id": "INV-BENCH-0117",
+  "gap_id": "GAP-6E627AAD",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-117-00",
+    "timestamp": "2026-08-25T07:20:13Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-2",
+    "process_id": "PROC-2279",
+    "parent_process_id": null,
+    "event_type": "FileAccess",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-117-02",
+    "timestamp": "2026-08-25T07:47:27Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-8",
+    "process_id": "PROC-2279",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.001",
+    "technique_name": "Benchmark T1021.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": true,
+    "process_relationship": false,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-A338BBBA",
+      "gap_id": "GAP-6E627AAD",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+      "required_preconditions": [
+        "Initial access established"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1634s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-DELTA)",
+        "Same process (svchost.exe) active on both sides of gap",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-2 \u2192 USER-8); candidate is associated with the prior user",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.9,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.8625,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-POS-df70890d",
+      "gap_id": "GAP-6E627AAD",
+      "event_type": "SyntheticAccess",
+      "technique_id": "T1003",
+      "technique_name": "Benchmark T1003",
+      "description": "Positive candidate for benchmark variety",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (1634s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-DELTA)",
+        "Same process (svchost.exe) active on both sides of gap",
+        "Technique stage (3) correctly bridges the gap (1 \u2192 3 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-2 \u2192 USER-8); candidate is associated with the prior user",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.9,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.8625,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-A338BBBA": 0.8625,
+    "CAND-POS-df70890d": 0.8625
+  },
+  "evidence": [
+    {
+      "reference": "GAP-6E627AAD-SUP-001",
+      "fact": "[temporal] Gap window (1634.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-SUP-002",
+      "fact": "[host] Host context consistent across gap (HOST-DELTA)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-SUP-003",
+      "fact": "[process] Same process (svchost.exe) active across gap",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-SUP-004",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-SUP-005",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-MIS-006",
+      "fact": "[user] User context changes (USER-2 \u2192 USER-8); candidate may run under either user account",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-6E627AAD"
+    },
+    {
+      "reference": "GAP-6E627AAD-CON-008",
+      "fact": "Top-2 candidates (T1059.001: 0.8625, T1003: 0.8625) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates.",
+      "source_type": "contradictory_evidence",
+      "source_id": "GAP-6E627AAD"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-0473C7D5",
+    "gap_id": "GAP-6E627AAD",
+    "status": "UNKNOWN",
+    "candidate_id": "CAND-A338BBBA",
+    "event_type": "ProcessCreate",
+    "technique_id": "T1059.001",
+    "technique_name": "Command and Scripting Interpreter: PowerShell",
+    "candidate_score": 0.8625,
+    "verification_score": 0.875,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (1634.0s) is sufficient for candidate execution",
+      "[host] Host context consistent across gap (HOST-DELTA)",
+      "[process] Same process (svchost.exe) active across gap",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[user] User context changes (USER-2 \u2192 USER-8); candidate may run under either user account",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [
+      "Top-2 candidates (T1059.001: 0.8625, T1003: 0.8625) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates."
+    ],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "PASS",
+      "user": "UNKNOWN",
+      "process": "PASS",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Multiple candidates have comparable evidence support. Top-2 candidates (T1059.001: 0.8625, T1003: 0.8625) have equivalent evidence support (delta=0.0000 \u2264 0.05). Direct telemetry is unavailable. The available evidence cannot distinguish between these candidates. Classification withheld: UNKNOWN.",
+    "created_at": "2026-09-16T12:59:38.482528Z"
+  },
+  "classification": "UNKNOWN",
+  "knowledge_context": "No specific local knowledge found for transition FileAccess->NetworkConnection.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.482623+00:00",
+    "seed": 42
+  }
+}

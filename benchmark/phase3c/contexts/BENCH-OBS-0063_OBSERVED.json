@@ -1,0 +1,198 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-OBS-0063",
+  "investigation_id": "INV-BENCH-OBS-0063",
+  "gap_id": "GAP-B82749C3",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-063-00",
+    "timestamp": "2026-08-23T01:18:41Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-5",
+    "process_id": "PROC-7275",
+    "parent_process_id": null,
+    "event_type": "FileAccess",
+    "process_name": "powershell.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1190",
+    "technique_name": "Benchmark T1190",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-063-02",
+    "timestamp": "2026-08-23T01:50:39Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-5",
+    "process_id": "PROC-8728",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.002",
+    "technique_name": "Benchmark T1021.002",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.65,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": false,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": true
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-OBS-9cc4ac91",
+      "gap_id": "GAP-B82749C3",
+      "event_type": "FileAccess",
+      "technique_id": "T1059.003",
+      "technique_name": "Benchmark T1059.003",
+      "description": "Candidate matching directly observed telemetry",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (1918s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-ALPHA)",
+        "Consistent user context (USER-5) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)",
+        "Technique node T1059.003 already present in graph"
+      ],
+      "contradictory_features": [
+        "No direct process lineage between PROC-7275 and PROC-8728",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.65,
+      "candidate_score": 0.9075,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-C4B335E0",
+      "gap_id": "GAP-B82749C3",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "A command interpreter (e.g., PowerShell, cmd.exe) was likely executed as an intermediate step to run staging or credential harvesting commands before lateral movement.",
+      "required_preconditions": [
+        "Initial access established on the host",
+        "Ability to execute commands (e.g., via exploit or phishing payload)"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1918s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-ALPHA)",
+        "Consistent user context (USER-5) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "No direct process lineage between PROC-7275 and PROC-8728",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.9025,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 2
+    },
+    {
+      "candidate_id": "CAND-D0533B13",
+      "gap_id": "GAP-B82749C3",
+      "event_type": "ProcessAccess",
+      "technique_id": "T1003.001",
+      "technique_name": "OS Credential Dumping: LSASS Memory",
+      "description": "Credential dumping likely occurred between initial access and lateral movement. LSASS is a common target after an initial foothold is established.",
+      "required_preconditions": [
+        "Execution capability established via initial access vector",
+        "Elevated privileges"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1918s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-ALPHA)",
+        "Consistent user context (USER-5) on both sides",
+        "Technique stage (3) correctly bridges the gap (1 \u2192 3 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "No direct process lineage between PROC-7275 and PROC-8728",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.9025,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 2
+    }
+  ],
+  "candidate_scores": {
+    "CAND-OBS-9cc4ac91": 0.9075,
+    "CAND-C4B335E0": 0.9025,
+    "CAND-D0533B13": 0.9025
+  },
+  "evidence": [
+    {
+      "reference": "GAP-B82749C3-SUP-001",
+      "fact": "Direct telemetry match found: event EVT-BENCH-063-01 (T1059.003, FileAccess) exists in observed data within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-B82749C3"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-486835EC",
+    "gap_id": "GAP-B82749C3",
+    "status": "OBSERVED",
+    "candidate_id": "CAND-OBS-9cc4ac91",
+    "event_type": "FileAccess",
+    "technique_id": "T1059.003",
+    "technique_name": "Benchmark T1059.003",
+    "candidate_score": 0.9075,
+    "verification_score": 1.0,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "Direct telemetry match found: event EVT-BENCH-063-01 (T1059.003, FileAccess) exists in observed data within the gap window"
+    ],
+    "missing_evidence": [],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "direct_telemetry": "PASS"
+    },
+    "explanation": "Event with technique T1059.003 and type FileAccess was directly observed within the gap window on HOST-ALPHA. Classification: OBSERVED.",
+    "created_at": "2026-09-16T12:59:38.471526Z"
+  },
+  "classification": "OBSERVED",
+  "knowledge_context": "No specific local knowledge found for transition FileAccess->NetworkConnection.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.471655+00:00",
+    "seed": 42
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-OBS-0076",
+  "investigation_id": "INV-BENCH-OBS-0076",
+  "gap_id": "GAP-9C9105FD",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-076-01",
+    "timestamp": "2026-08-23T14:35:23Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-4",
+    "process_id": "PROC-5072",
+    "parent_process_id": null,
+    "event_type": "ServiceInstallation",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-076-03",
+    "timestamp": "2026-08-23T15:13:17Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-1",
+    "process_id": "PROC-3571",
+    "parent_process_id": null,
+    "event_type": "AuthenticationEvent",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.002",
+    "technique_name": "Benchmark T1021.002",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.65,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": true,
+    "user_continuity": true,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-OBS-45b54009",
+      "gap_id": "GAP-9C9105FD",
+      "event_type": "NetworkConnection",
+      "technique_id": "T1003",
+      "technique_name": "Benchmark T1003",
+      "description": "Candidate matching directly observed telemetry",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (2274s \u2265 30s threshold)",
+        "Technique stage (3) correctly bridges the gap (1 \u2192 3 \u2192 4)",
+        "Technique node T1003 already present in graph"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-BRAVO \u2192 HOST-DELTA); candidate expected on source host",
+        "User context changes across gap (USER-4 \u2192 USER-1); candidate is associated with the prior user",
+        "No direct process lineage between PROC-5072 and PROC-3571",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 0.5,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.65,
+      "candidate_score": 0.695,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-E957C46A",
+      "gap_id": "GAP-9C9105FD",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+      "required_preconditions": [
+        "Initial access established"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (2274s \u2265 30s threshold)",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-BRAVO \u2192 HOST-DELTA); candidate expected on source host",
+        "User context changes across gap (USER-4 \u2192 USER-1); candidate is associated with the prior user",
+        "No direct process lineage between PROC-5072 and PROC-3571",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 0.5,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.69,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 2
+    }
+  ],
+  "candidate_scores": {
+    "CAND-OBS-45b54009": 0.695,
+    "CAND-E957C46A": 0.69
+  },
+  "evidence": [
+    {
+      "reference": "GAP-9C9105FD-SUP-001",
+      "fact": "Direct telemetry match found: event EVT-BENCH-076-02 (T1003, NetworkConnection) exists in observed data within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-9C9105FD"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-171EBD3D",
+    "gap_id": "GAP-9C9105FD",
+    "status": "OBSERVED",
+    "candidate_id": "CAND-OBS-45b54009",
+    "event_type": "NetworkConnection",
+    "technique_id": "T1003",
+    "technique_name": "Benchmark T1003",
+    "candidate_score": 0.695,
+    "verification_score": 1.0,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "Direct telemetry match found: event EVT-BENCH-076-02 (T1003, NetworkConnection) exists in observed data within the gap window"
+    ],
+    "missing_evidence": [],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "direct_telemetry": "PASS"
+    },
+    "explanation": "Event with technique T1003 and type NetworkConnection was directly observed within the gap window on HOST-BRAVO. Classification: OBSERVED.",
+    "created_at": "2026-09-16T12:59:38.474285Z"
+  },
+  "classification": "OBSERVED",
+  "knowledge_context": "No specific local knowledge found for transition ServiceInstallation->AuthenticationEvent.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.474389+00:00",
+    "seed": 42
+  }
+}

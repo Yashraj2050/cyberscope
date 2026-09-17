@@ -1,0 +1,174 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0186",
+  "investigation_id": "INV-BENCH-0186",
+  "gap_id": "GAP-A01626E1",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-186-00",
+    "timestamp": "2026-08-28T04:19:57Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-6",
+    "process_id": "PROC-6134",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-186-02",
+    "timestamp": "2026-08-28T04:45:06Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-6",
+    "process_id": "PROC-4639",
+    "parent_process_id": null,
+    "event_type": "AuthenticationEvent",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": false,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-POS-333f99e6",
+      "gap_id": "GAP-A01626E1",
+      "event_type": "SyntheticAccess",
+      "technique_id": "T1059.003",
+      "technique_name": "Benchmark T1059.003",
+      "description": "Positive candidate for benchmark variety",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (1509s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-BRAVO)",
+        "Consistent user context (USER-6) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 3)"
+      ],
+      "contradictory_features": [
+        "No direct process lineage between PROC-6134 and PROC-4639",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.9025,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-POS-333f99e6": 0.9025
+  },
+  "evidence": [
+    {
+      "reference": "GAP-A01626E1-SUP-001",
+      "fact": "[temporal] Gap window (1509.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-SUP-002",
+      "fact": "[host] Host context consistent across gap (HOST-BRAVO)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-SUP-003",
+      "fact": "[user] User context consistent across gap (USER-6)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-SUP-004",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-SUP-005",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-MIS-006",
+      "fact": "[process] No direct process lineage between PROC-6134 and PROC-4639",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-A01626E1"
+    },
+    {
+      "reference": "GAP-A01626E1-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-A01626E1"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-4B6ED815",
+    "gap_id": "GAP-A01626E1",
+    "status": "INFERRED",
+    "candidate_id": "CAND-POS-333f99e6",
+    "event_type": "SyntheticAccess",
+    "technique_id": "T1059.003",
+    "technique_name": "Benchmark T1059.003",
+    "candidate_score": 0.9025,
+    "verification_score": 0.875,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (1509.0s) is sufficient for candidate execution",
+      "[host] Host context consistent across gap (HOST-BRAVO)",
+      "[user] User context consistent across gap (USER-6)",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[process] No direct process lineage between PROC-6134 and PROC-4639",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "PASS",
+      "user": "PASS",
+      "process": "UNKNOWN",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Candidate Benchmark T1059.003 (Evidence Support Score: 0.9025) passed 5/7 verification checks (verification score: 0.8750 \u2265 0.7). 2 check(s) had insufficient evidence but no contradictions were found. Classification: INFERRED. Note: INFERRED does not mean the event definitely occurred.",
+    "created_at": "2026-09-16T12:59:38.493417Z"
+  },
+  "classification": "INFERRED",
+  "knowledge_context": "No specific local knowledge found for transition ProcessExecution->AuthenticationEvent.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.493534+00:00",
+    "seed": 42
+  }
+}

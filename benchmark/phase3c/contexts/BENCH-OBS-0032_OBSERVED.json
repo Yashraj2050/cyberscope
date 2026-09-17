@@ -1,0 +1,126 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-OBS-0032",
+  "investigation_id": "INV-BENCH-OBS-0032",
+  "gap_id": "GAP-D063013C",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-032-00",
+    "timestamp": "2026-08-21T18:13:31Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-5",
+    "process_id": "PROC-6848",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-032-02",
+    "timestamp": "2026-08-21T18:42:14Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-3",
+    "process_id": "PROC-6848",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003",
+    "technique_name": "Benchmark T1003",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": true,
+    "process_relationship": false,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-OBS-ed697ccd",
+      "gap_id": "GAP-D063013C",
+      "event_type": "ProcessExecution",
+      "technique_id": "T1003.001",
+      "technique_name": "Benchmark T1003.001",
+      "description": "Candidate matching directly observed telemetry",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (1723s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-BRAVO)",
+        "Same process (cmd.exe) active on both sides of gap",
+        "Technique node T1003.001 already present in graph"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-5 \u2192 USER-3); candidate is associated with the prior user",
+        "Technique stage (3) is at boundary rather than bridging the gap",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.9,
+      "technique_score": 0.5,
+      "graph_score": 0.65,
+      "candidate_score": 0.7175,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-OBS-ed697ccd": 0.7175
+  },
+  "evidence": [
+    {
+      "reference": "GAP-D063013C-SUP-001",
+      "fact": "Direct telemetry match found: event EVT-BENCH-032-01 (T1003.001, ProcessExecution) exists in observed data within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-D063013C"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-8DCE1D5E",
+    "gap_id": "GAP-D063013C",
+    "status": "OBSERVED",
+    "candidate_id": "CAND-OBS-ed697ccd",
+    "event_type": "ProcessExecution",
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "candidate_score": 0.7175,
+    "verification_score": 1.0,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "Direct telemetry match found: event EVT-BENCH-032-01 (T1003.001, ProcessExecution) exists in observed data within the gap window"
+    ],
+    "missing_evidence": [],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "direct_telemetry": "PASS"
+    },
+    "explanation": "Event with technique T1003.001 and type ProcessExecution was directly observed within the gap window on HOST-BRAVO. Classification: OBSERVED.",
+    "created_at": "2026-09-16T12:59:38.464663Z"
+  },
+  "classification": "OBSERVED",
+  "knowledge_context": "No specific local knowledge found for transition NetworkConnection->ProcessExecution.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.464761+00:00",
+    "seed": 42
+  }
+}

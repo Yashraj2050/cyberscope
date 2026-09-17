@@ -1,0 +1,176 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0113",
+  "investigation_id": "INV-BENCH-0113",
+  "gap_id": "GAP-6CE5D603",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-113-00",
+    "timestamp": "2026-08-25T03:13:21Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-3",
+    "process_id": "PROC-5227",
+    "parent_process_id": null,
+    "event_type": "ServiceInstallation",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-113-02",
+    "timestamp": "2026-08-25T03:31:28Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-8",
+    "process_id": "PROC-5227",
+    "parent_process_id": null,
+    "event_type": "FileAccess",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.001",
+    "technique_name": "Benchmark T1021.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": true,
+    "process_relationship": false,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-82FFE29A",
+      "gap_id": "GAP-6CE5D603",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+      "required_preconditions": [
+        "Initial access established"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1087s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-DELTA)",
+        "Same process (svchost.exe) active on both sides of gap",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-3 \u2192 USER-8); candidate is associated with the prior user",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.9,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.8625,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-82FFE29A": 0.8625
+  },
+  "evidence": [
+    {
+      "reference": "GAP-6CE5D603-SUP-001",
+      "fact": "[temporal] Gap window (1087.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-SUP-002",
+      "fact": "[host] Host context consistent across gap (HOST-DELTA)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-SUP-003",
+      "fact": "[process] Same process (svchost.exe) active across gap",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-SUP-004",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-SUP-005",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-MIS-006",
+      "fact": "[user] User context changes (USER-3 \u2192 USER-8); candidate may run under either user account",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-6CE5D603"
+    },
+    {
+      "reference": "GAP-6CE5D603-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-6CE5D603"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-77EDF87B",
+    "gap_id": "GAP-6CE5D603",
+    "status": "INFERRED",
+    "candidate_id": "CAND-82FFE29A",
+    "event_type": "ProcessCreate",
+    "technique_id": "T1059.001",
+    "technique_name": "Command and Scripting Interpreter: PowerShell",
+    "candidate_score": 0.8625,
+    "verification_score": 0.875,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (1087.0s) is sufficient for candidate execution",
+      "[host] Host context consistent across gap (HOST-DELTA)",
+      "[process] Same process (svchost.exe) active across gap",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[user] User context changes (USER-3 \u2192 USER-8); candidate may run under either user account",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "PASS",
+      "user": "UNKNOWN",
+      "process": "PASS",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Candidate Command and Scripting Interpreter: PowerShell (Evidence Support Score: 0.8625) passed 5/7 verification checks (verification score: 0.8750 \u2265 0.7). 2 check(s) had insufficient evidence but no contradictions were found. Classification: INFERRED. Note: INFERRED does not mean the event definitely occurred.",
+    "created_at": "2026-09-16T12:59:38.481481Z"
+  },
+  "classification": "INFERRED",
+  "knowledge_context": "No specific local knowledge found for transition ServiceInstallation->FileAccess.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.481573+00:00",
+    "seed": 42
+  }
+}

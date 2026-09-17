@@ -1,0 +1,126 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-OBS-0031",
+  "investigation_id": "INV-BENCH-OBS-0031",
+  "gap_id": "GAP-740487A2",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-031-01",
+    "timestamp": "2026-08-21T17:53:38Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-6",
+    "process_id": "PROC-1713",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-031-03",
+    "timestamp": "2026-08-21T18:36:50Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-8",
+    "process_id": "PROC-4302",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "cmd.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003",
+    "technique_name": "Benchmark T1003",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.5,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": true,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-OBS-2c980326",
+      "gap_id": "GAP-740487A2",
+      "event_type": "NetworkConnection",
+      "technique_id": "T1003.001",
+      "technique_name": "Benchmark T1003.001",
+      "description": "Candidate matching directly observed telemetry",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (2592s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-DELTA)",
+        "Technique node T1003.001 already present in graph"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-6 \u2192 USER-8); candidate is associated with the prior user",
+        "No direct process lineage between PROC-1713 and PROC-4302",
+        "Technique stage (3) is at boundary rather than bridging the gap",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.5,
+      "technique_score": 0.5,
+      "graph_score": 0.65,
+      "candidate_score": 0.6575,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-OBS-2c980326": 0.6575
+  },
+  "evidence": [
+    {
+      "reference": "GAP-740487A2-SUP-001",
+      "fact": "Direct telemetry match found: event EVT-BENCH-031-02 (T1003.001, NetworkConnection) exists in observed data within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-740487A2"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-002B2CD7",
+    "gap_id": "GAP-740487A2",
+    "status": "OBSERVED",
+    "candidate_id": "CAND-OBS-2c980326",
+    "event_type": "NetworkConnection",
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "candidate_score": 0.6575,
+    "verification_score": 1.0,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "Direct telemetry match found: event EVT-BENCH-031-02 (T1003.001, NetworkConnection) exists in observed data within the gap window"
+    ],
+    "missing_evidence": [],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "direct_telemetry": "PASS"
+    },
+    "explanation": "Event with technique T1003.001 and type NetworkConnection was directly observed within the gap window on HOST-DELTA. Classification: OBSERVED.",
+    "created_at": "2026-09-16T12:59:38.464208Z"
+  },
+  "classification": "OBSERVED",
+  "knowledge_context": "No specific local knowledge found for transition NetworkConnection->ProcessExecution.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.464337+00:00",
+    "seed": 42
+  }
+}

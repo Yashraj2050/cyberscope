@@ -1,0 +1,13 @@
+{
+  "model_name": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "repository": "Unknown",
+  "exact_filename": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "quantization": "Q4_K_M",
+  "sha256": "recorded-offline",
+  "license": "Apache-2.0",
+  "runtime": "llama-cpp-python",
+  "runtime_version": "latest",
+  "context_length": 2048,
+  "benchmark_date": "2026-09-16T17:34:20.767161",
+  "benchmark_hardware": "Apple M1 8GB"
+}

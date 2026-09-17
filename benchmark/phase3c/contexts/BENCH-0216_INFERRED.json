@@ -1,0 +1,174 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0216",
+  "investigation_id": "INV-BENCH-0216",
+  "gap_id": "GAP-67FE7F8C",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-216-00",
+    "timestamp": "2026-08-29T10:10:48Z",
+    "host_id": "HOST-CHARLIE",
+    "user_id": "USER-5",
+    "process_id": "PROC-7275",
+    "parent_process_id": null,
+    "event_type": "ServiceInstallation",
+    "process_name": "explorer.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-216-02",
+    "timestamp": "2026-08-29T10:21:08Z",
+    "host_id": "HOST-CHARLIE",
+    "user_id": "USER-4",
+    "process_id": "PROC-7089",
+    "parent_process_id": null,
+    "event_type": "FileAccess",
+    "process_name": "svchost.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.5,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": false,
+    "user_continuity": true,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-POS-5ba162d9",
+      "gap_id": "GAP-67FE7F8C",
+      "event_type": "SyntheticAccess",
+      "technique_id": "T1059.003",
+      "technique_name": "Benchmark T1059.003",
+      "description": "Positive candidate for benchmark variety",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (620s \u2265 30s threshold)",
+        "Same host context on both sides of gap (HOST-CHARLIE)",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 3)"
+      ],
+      "contradictory_features": [
+        "User context changes across gap (USER-5 \u2192 USER-4); candidate is associated with the prior user",
+        "No direct process lineage between PROC-7275 and PROC-7089",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 1.0,
+      "user_score": 0.5,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.8025,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-POS-5ba162d9": 0.8025
+  },
+  "evidence": [
+    {
+      "reference": "GAP-67FE7F8C-SUP-001",
+      "fact": "[temporal] Gap window (620.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-SUP-002",
+      "fact": "[host] Host context consistent across gap (HOST-CHARLIE)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-SUP-003",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-SUP-004",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-MIS-005",
+      "fact": "[user] User context changes (USER-5 \u2192 USER-4); candidate may run under either user account",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-MIS-006",
+      "fact": "[process] No direct process lineage between PROC-7275 and PROC-7089",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-67FE7F8C"
+    },
+    {
+      "reference": "GAP-67FE7F8C-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-67FE7F8C"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-16AAF2DF",
+    "gap_id": "GAP-67FE7F8C",
+    "status": "INFERRED",
+    "candidate_id": "CAND-POS-5ba162d9",
+    "event_type": "SyntheticAccess",
+    "technique_id": "T1059.003",
+    "technique_name": "Benchmark T1059.003",
+    "candidate_score": 0.8025,
+    "verification_score": 0.8,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (620.0s) is sufficient for candidate execution",
+      "[host] Host context consistent across gap (HOST-CHARLIE)",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 3)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[user] User context changes (USER-5 \u2192 USER-4); candidate may run under either user account",
+      "[process] No direct process lineage between PROC-7275 and PROC-7089",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "PASS",
+      "user": "UNKNOWN",
+      "process": "UNKNOWN",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Candidate Benchmark T1059.003 (Evidence Support Score: 0.8025) passed 4/7 verification checks (verification score: 0.8000 \u2265 0.7). 3 check(s) had insufficient evidence but no contradictions were found. Classification: INFERRED. Note: INFERRED does not mean the event definitely occurred.",
+    "created_at": "2026-09-16T12:59:38.498177Z"
+  },
+  "classification": "INFERRED",
+  "knowledge_context": "No specific local knowledge found for transition ServiceInstallation->FileAccess.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.498296+00:00",
+    "seed": 42
+  }
+}

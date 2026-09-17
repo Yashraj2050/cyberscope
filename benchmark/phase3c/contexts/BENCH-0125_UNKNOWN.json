@@ -1,0 +1,88 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0125",
+  "investigation_id": "INV-BENCH-0125",
+  "gap_id": "GAP-D435C897",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-125-00",
+    "timestamp": "2026-08-25T15:28:58Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-2",
+    "process_id": "PROC-9190",
+    "parent_process_id": null,
+    "event_type": "AuthenticationEvent",
+    "process_name": "wmiprvse.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-125-02",
+    "timestamp": "2026-08-25T16:07:05Z",
+    "host_id": "HOST-BRAVO",
+    "user_id": "USER-2",
+    "process_id": "PROC-9190",
+    "parent_process_id": null,
+    "event_type": "RegistryModification",
+    "process_name": "wmiprvse.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.4,
+  "gap_signals": {
+    "temporal": true,
+    "host_continuity": false,
+    "user_continuity": false,
+    "process_relationship": false,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [],
+  "candidate_scores": {},
+  "evidence": [
+    {
+      "reference": "GAP-D435C897-MIS-001",
+      "fact": "No reconstruction candidates could be generated from the observed telemetry for this gap",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-D435C897"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-CF705544",
+    "gap_id": "GAP-D435C897",
+    "status": "UNKNOWN",
+    "candidate_id": null,
+    "event_type": null,
+    "technique_id": null,
+    "technique_name": null,
+    "candidate_score": null,
+    "verification_score": 0.0,
+    "confidence_label": "LOW",
+    "supporting_evidence": [],
+    "missing_evidence": [
+      "No reconstruction candidates could be generated from the observed telemetry for this gap"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {},
+    "explanation": "No candidates were generated. The knowledge base contained no matching transition rule for the observed technique pair. The system abstains: insufficient evidence to reconstruct this gap.",
+    "created_at": "2026-09-16T12:59:38.484736Z"
+  },
+  "classification": "UNKNOWN",
+  "knowledge_context": "No specific local knowledge found for transition AuthenticationEvent->RegistryModification.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.484839+00:00",
+    "seed": 42
+  }
+}

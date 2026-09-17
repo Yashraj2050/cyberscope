@@ -1,0 +1,176 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-0124",
+  "investigation_id": "INV-BENCH-0124",
+  "gap_id": "GAP-FBCCA846",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-124-00",
+    "timestamp": "2026-08-25T14:11:14Z",
+    "host_id": "HOST-DELTA",
+    "user_id": "USER-6",
+    "process_id": "PROC-1746",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "powershell.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-124-02",
+    "timestamp": "2026-08-25T14:40:38Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-6",
+    "process_id": "PROC-7060",
+    "parent_process_id": null,
+    "event_type": "NetworkConnection",
+    "process_name": "powershell.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1569.002",
+    "technique_name": "Benchmark T1569.002",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.55,
+  "gap_signals": {
+    "temporal": false,
+    "host_continuity": true,
+    "user_continuity": false,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-42D39D76",
+      "gap_id": "GAP-FBCCA846",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+      "required_preconditions": [
+        "Initial access established"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (1764s \u2265 30s threshold)",
+        "Consistent user context (USER-6) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-DELTA \u2192 HOST-ALPHA); candidate expected on source host",
+        "No direct process lineage between PROC-1746 and PROC-7060",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.79,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    }
+  ],
+  "candidate_scores": {
+    "CAND-42D39D76": 0.79
+  },
+  "evidence": [
+    {
+      "reference": "GAP-FBCCA846-SUP-001",
+      "fact": "[temporal] Gap window (1764.0s) is sufficient for candidate execution",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-SUP-002",
+      "fact": "[user] User context consistent across gap (USER-6)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-SUP-003",
+      "fact": "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-SUP-004",
+      "fact": "[contradiction] No contradicting events observed within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-MIS-005",
+      "fact": "[host] Host changes across gap (HOST-DELTA \u2192 HOST-ALPHA); candidate origin host is uncertain",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-MIS-006",
+      "fact": "[process] No direct process lineage between PROC-1746 and PROC-7060",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-FBCCA846"
+    },
+    {
+      "reference": "GAP-FBCCA846-MIS-007",
+      "fact": "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs",
+      "source_type": "missing_evidence",
+      "source_id": "GAP-FBCCA846"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-548DC181",
+    "gap_id": "GAP-FBCCA846",
+    "status": "INFERRED",
+    "candidate_id": "CAND-42D39D76",
+    "event_type": "ProcessCreate",
+    "technique_id": "T1059.001",
+    "technique_name": "Command and Scripting Interpreter: PowerShell",
+    "candidate_score": 0.79,
+    "verification_score": 0.8,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "[temporal] Gap window (1764.0s) is sufficient for candidate execution",
+      "[user] User context consistent across gap (USER-6)",
+      "[technique] Candidate technique stage (2) correctly bridges gap (1 \u2192 2 \u2192 4)",
+      "[contradiction] No contradicting events observed within the gap window"
+    ],
+    "missing_evidence": [
+      "[host] Host changes across gap (HOST-DELTA \u2192 HOST-ALPHA); candidate origin host is uncertain",
+      "[process] No direct process lineage between PROC-1746 and PROC-7060",
+      "[graph] No shared graph context between boundary events; candidate would bridge disconnected subgraphs"
+    ],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "temporal": "PASS",
+      "host": "UNKNOWN",
+      "user": "PASS",
+      "process": "UNKNOWN",
+      "technique": "PASS",
+      "graph": "UNKNOWN",
+      "contradiction": "PASS"
+    },
+    "explanation": "Candidate Command and Scripting Interpreter: PowerShell (Evidence Support Score: 0.7900) passed 4/7 verification checks (verification score: 0.8000 \u2265 0.7). 3 check(s) had insufficient evidence but no contradictions were found. Classification: INFERRED. Note: INFERRED does not mean the event definitely occurred.",
+    "created_at": "2026-09-16T12:59:38.484381Z"
+  },
+  "classification": "INFERRED",
+  "knowledge_context": "No specific local knowledge found for transition ProcessExecution->NetworkConnection.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.484474+00:00",
+    "seed": 42
+  }
+}

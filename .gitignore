@@ -48,3 +48,32 @@ src-tauri/bin/engine-*
 # AI / Agents
 .gemini/
 Antigravity/
+*.gguf
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Runtime / generated outputs
+engine/logs/
+engine/analysis_result.json
+engine/run_result.json
+engine/verify_result.json
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Runtime databases / local state
+*.db
+*.sqlite
+*.sqlite3
+
+# Benchmark runtime outputs
+benchmark/phase3c/results/

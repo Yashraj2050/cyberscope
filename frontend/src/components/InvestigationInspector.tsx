@@ -174,13 +174,36 @@ function CandidateCard({ candidate, isTie }: { candidate: ReconstructionCandidat
           <div style={{ fontSize: '12px', marginTop: '4px' }}>{candidate.technique_name}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div className="mono" style={{ fontSize: '14px', fontWeight: 700 }}>{candidate.candidate_score.toFixed(4)}</div>
+          <div className="mono" style={{ fontSize: '14px', fontWeight: 700 }}>
+            {candidate.final_ranking_score.toFixed(4)}
+          </div>
           {expanded ? <ChevronDown size={14} style={{ marginTop: '8px', color: 'var(--text-muted)' }} /> : <ChevronRight size={14} style={{ marginTop: '8px', color: 'var(--text-muted)' }} />}
         </div>
       </div>
       
       {expanded && (
         <div style={{ padding: '12px', borderTop: '1px solid var(--bg-tertiary)', fontSize: '11px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px', backgroundColor: 'var(--bg-secondary)', padding: '8px', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)' }}>
+              <span>Deterministic Score:</span>
+              <span>{candidate.deterministic_score.toFixed(4)}</span>
+            </div>
+            {candidate.ml_ranking_score !== null && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)' }}>
+                <span>ML Ranking Score:</span>
+                <span>{candidate.ml_ranking_score.toFixed(4)}</span>
+              </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+              <span>Final Ranking Score:</span>
+              <span>{candidate.final_ranking_score.toFixed(4)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+              <span>Ranking Method:</span>
+              <span>{candidate.rank_method}</span>
+            </div>
+          </div>
+
           <div style={{ fontWeight: 700, marginBottom: '12px', letterSpacing: '1px', color: 'var(--text-muted)' }}>
             EVIDENCE SUPPORT SCORE
           </div>

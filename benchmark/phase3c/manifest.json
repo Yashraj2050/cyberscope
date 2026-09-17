@@ -1,0 +1,314 @@
+{
+  "benchmark_id": "phase3c-llm-benchmark",
+  "version": "1.0.0",
+  "export_timestamp": "2026-09-16T12:59:38.513788+00:00",
+  "seed": 42,
+  "total_contexts": 30,
+  "classification_distribution": {
+    "OBSERVED": 10,
+    "INFERRED": 10,
+    "UNKNOWN": 10
+  },
+  "contexts": [
+    {
+      "case_id": "BENCH-OBS-0005",
+      "filename": "BENCH-OBS-0005_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3709,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0020",
+      "filename": "BENCH-OBS-0020_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 3,
+      "character_count": 6246,
+      "gap_score": 0.55,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0026",
+      "filename": "BENCH-OBS-0026_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3769,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0031",
+      "filename": "BENCH-OBS-0031_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3759,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0032",
+      "filename": "BENCH-OBS-0032_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3743,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0042",
+      "filename": "BENCH-OBS-0042_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3794,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0046",
+      "filename": "BENCH-OBS-0046_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 1,
+      "character_count": 3732,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0063",
+      "filename": "BENCH-OBS-0063_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 3,
+      "character_count": 6227,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0076",
+      "filename": "BENCH-OBS-0076_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 2,
+      "character_count": 5112,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-OBS-0103",
+      "filename": "BENCH-OBS-0103_OBSERVED.json",
+      "classification": "OBSERVED",
+      "evidence_count": 1,
+      "candidate_count": 2,
+      "character_count": 5034,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0111",
+      "filename": "BENCH-0111_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5367,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0113",
+      "filename": "BENCH-0113_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5694,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0124",
+      "filename": "BENCH-0124_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5719,
+      "gap_score": 0.55,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0126",
+      "filename": "BENCH-0126_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5877,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0186",
+      "filename": "BENCH-0186_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5375,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0200",
+      "filename": "BENCH-0200_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5490,
+      "gap_score": 0.45,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0208",
+      "filename": "BENCH-0208_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5500,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0216",
+      "filename": "BENCH-0216_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5514,
+      "gap_score": 0.5,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0226",
+      "filename": "BENCH-0226_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5575,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0245",
+      "filename": "BENCH-0245_INFERRED.json",
+      "classification": "INFERRED",
+      "evidence_count": 7,
+      "candidate_count": 1,
+      "character_count": 5749,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0105",
+      "filename": "BENCH-0105_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 3,
+      "character_count": 8885,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0109",
+      "filename": "BENCH-0109_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 3,
+      "character_count": 8880,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0115",
+      "filename": "BENCH-0115_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 2,
+      "character_count": 7182,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0117",
+      "filename": "BENCH-0117_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 2,
+      "character_count": 7313,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0119",
+      "filename": "BENCH-0119_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 3,
+      "character_count": 8879,
+      "gap_score": 0.55,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0123",
+      "filename": "BENCH-0123_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 4,
+      "character_count": 10098,
+      "gap_score": 0.7,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0125",
+      "filename": "BENCH-0125_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 1,
+      "candidate_count": 0,
+      "character_count": 2496,
+      "gap_score": 0.4,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0127",
+      "filename": "BENCH-0127_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 3,
+      "character_count": 8886,
+      "gap_score": 0.55,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0141",
+      "filename": "BENCH-0141_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 1,
+      "candidate_count": 0,
+      "character_count": 2490,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    },
+    {
+      "case_id": "BENCH-0143",
+      "filename": "BENCH-0143_UNKNOWN.json",
+      "classification": "UNKNOWN",
+      "evidence_count": 8,
+      "candidate_count": 3,
+      "character_count": 8912,
+      "gap_score": 0.65,
+      "context_schema_version": "1.0.0"
+    }
+  ]
+}

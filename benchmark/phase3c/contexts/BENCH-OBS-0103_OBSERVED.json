@@ -1,0 +1,161 @@
+{
+  "context_schema_version": "1.0.0",
+  "case_id": "BENCH-OBS-0103",
+  "investigation_id": "INV-BENCH-OBS-0103",
+  "gap_id": "GAP-BF091F08",
+  "preceding_event": {
+    "event_id": "EVT-BENCH-103-00",
+    "timestamp": "2026-08-24T17:01:59Z",
+    "host_id": "HOST-CHARLIE",
+    "user_id": "USER-7",
+    "process_id": "PROC-6298",
+    "parent_process_id": null,
+    "event_type": "FileAccess",
+    "process_name": "wmiprvse.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1078",
+    "technique_name": "Benchmark T1078",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "following_event": {
+    "event_id": "EVT-BENCH-103-02",
+    "timestamp": "2026-08-24T17:54:33Z",
+    "host_id": "HOST-ALPHA",
+    "user_id": "USER-7",
+    "process_id": "PROC-7124",
+    "parent_process_id": null,
+    "event_type": "ProcessExecution",
+    "process_name": "powershell.exe",
+    "source": "BenchmarkGenerator",
+    "source_event_id": null,
+    "technique_id": "T1021.002",
+    "technique_name": "Benchmark T1021.002",
+    "destination_host": null,
+    "destination_ip": null,
+    "metadata": {},
+    "raw_reference": {}
+  },
+  "gap_score": 0.65,
+  "gap_signals": {
+    "temporal": true,
+    "host_continuity": true,
+    "user_continuity": false,
+    "process_relationship": true,
+    "technique_transition": true,
+    "behavioral_prerequisite": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "CAND-OBS-722247c4",
+      "gap_id": "GAP-BF091F08",
+      "event_type": "AuthenticationEvent",
+      "technique_id": "T1003.001",
+      "technique_name": "Benchmark T1003.001",
+      "description": "Candidate matching directly observed telemetry",
+      "required_preconditions": [],
+      "supporting_features": [
+        "Sufficient temporal window (3154s \u2265 30s threshold)",
+        "Consistent user context (USER-7) on both sides",
+        "Technique stage (3) correctly bridges the gap (1 \u2192 3 \u2192 4)",
+        "Technique node T1003.001 already present in graph"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-ALPHA); candidate expected on source host",
+        "No direct process lineage between PROC-6298 and PROC-7124",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.65,
+      "candidate_score": 0.795,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 1
+    },
+    {
+      "candidate_id": "CAND-9254B703",
+      "gap_id": "GAP-BF091F08",
+      "event_type": "ProcessCreate",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "description": "Execution activity inferred from a large technique stage jump (Initial Access \u2192 Lateral Movement). [Fallback rule \u2014 lower confidence than specific match.]",
+      "required_preconditions": [
+        "Initial access established"
+      ],
+      "supporting_features": [
+        "Sufficient temporal window (3154s \u2265 30s threshold)",
+        "Consistent user context (USER-7) on both sides",
+        "Technique stage (2) correctly bridges the gap (1 \u2192 2 \u2192 4)"
+      ],
+      "contradictory_features": [
+        "Host context changes across gap (HOST-CHARLIE \u2192 HOST-ALPHA); candidate expected on source host",
+        "No direct process lineage between PROC-6298 and PROC-7124",
+        "No shared graph context between boundary events \u2014 candidate would need to bridge disconnected subgraphs"
+      ],
+      "temporal_score": 1.0,
+      "host_score": 0.55,
+      "user_score": 1.0,
+      "process_score": 0.5,
+      "technique_score": 1.0,
+      "graph_score": 0.55,
+      "candidate_score": 0.79,
+      "deterministic_score": 0.0,
+      "ml_ranking_score": null,
+      "final_ranking_score": 0.0,
+      "rank_method": "DETERMINISTIC",
+      "model_version": null,
+      "rank": 2
+    }
+  ],
+  "candidate_scores": {
+    "CAND-OBS-722247c4": 0.795,
+    "CAND-9254B703": 0.79
+  },
+  "evidence": [
+    {
+      "reference": "GAP-BF091F08-SUP-001",
+      "fact": "Direct telemetry match found: event EVT-BENCH-103-01 (T1003.001, AuthenticationEvent) exists in observed data within the gap window",
+      "source_type": "supporting_evidence",
+      "source_id": "GAP-BF091F08"
+    }
+  ],
+  "verification": {
+    "reconstruction_id": "REC-6F33ACFB",
+    "gap_id": "GAP-BF091F08",
+    "status": "OBSERVED",
+    "candidate_id": "CAND-OBS-722247c4",
+    "event_type": "AuthenticationEvent",
+    "technique_id": "T1003.001",
+    "technique_name": "Benchmark T1003.001",
+    "candidate_score": 0.795,
+    "verification_score": 1.0,
+    "confidence_label": "HIGH",
+    "supporting_evidence": [
+      "Direct telemetry match found: event EVT-BENCH-103-01 (T1003.001, AuthenticationEvent) exists in observed data within the gap window"
+    ],
+    "missing_evidence": [],
+    "contradictory_evidence": [],
+    "verification_checks": {
+      "direct_telemetry": "PASS"
+    },
+    "explanation": "Event with technique T1003.001 and type AuthenticationEvent was directly observed within the gap window on HOST-CHARLIE. Classification: OBSERVED.",
+    "created_at": "2026-09-16T12:59:38.478871Z"
+  },
+  "classification": "OBSERVED",
+  "knowledge_context": "No specific local knowledge found for transition FileAccess->ProcessExecution.",
+  "provenance": {
+    "engine_version": "1.0.0",
+    "export_timestamp": "2026-09-16T12:59:38.478974+00:00",
+    "seed": 42
+  }
+}

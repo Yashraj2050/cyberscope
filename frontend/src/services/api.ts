@@ -64,6 +64,11 @@ export interface ReconstructionCandidate {
   technique_name: string;
   description: string;
   candidate_score: number;
+  deterministic_score: number;
+  ml_ranking_score: number | null;
+  final_ranking_score: number;
+  rank_method: string;
+  model_version: string | null;
   temporal_score: number;
   host_score: number;
   user_score: number;
@@ -93,10 +98,23 @@ export interface ReconstructionResult {
   explanation: string;
 }
 
+export interface AnalysisMetadata {
+  ml_model_version: string | null;
+  ml_feature_schema_version: string | null;
+  ml_dataset_version: string | null;
+  ranker_mode: string;
+  hybrid_alpha: number | null;
+  ml_model_available: boolean;
+  ml_inference_timestamp: string | null;
+  ml_status: string | null;
+  ml_reason_code: string | null;
+}
+
 export interface FullPipelineResult {
   gap: ReconstructionGap;
   candidates: ReconstructionCandidate[];
   result: ReconstructionResult;
+  analysis_metadata?: AnalysisMetadata;
 }
 
 export interface ScenarioMetadata {
@@ -145,11 +163,11 @@ export async function getGraph(scenario: string): Promise<AttackGraph> {
   return response.json();
 }
 
-export async function runAnalysis(scenario: string): Promise<FullPipelineResult[]> {
+export async function runAnalysis(scenario: string, ranker_mode: string = "DETERMINISTIC", hybrid_alpha: number = 0.70): Promise<FullPipelineResult[]> {
   console.log("CYBERSCOPE REQUEST", {
     url: `${API_BASE}/reconstruction/verify`,
     method: "POST",
-    body: JSON.stringify({ scenario })
+    body: JSON.stringify({ scenario, ranker_mode, hybrid_alpha })
   });
 
   const response = await fetch(`${API_BASE}/reconstruction/verify`, {
@@ -157,7 +175,7 @@ export async function runAnalysis(scenario: string): Promise<FullPipelineResult[
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ scenario }),
+    body: JSON.stringify({ scenario, ranker_mode, hybrid_alpha }),
   });
   
   console.log("CYBERSCOPE RESPONSE", {
