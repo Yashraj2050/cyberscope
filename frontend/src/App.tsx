@@ -4,6 +4,8 @@ import { AppLayout } from './layouts/AppLayout';
 import { InvestigationLayout } from './layouts/InvestigationLayout';
 
 import { CasesList } from './routes/CasesList';
+import { EvaluationView } from './routes/EvaluationView';
+import { SettingsView } from './routes/SettingsView';
 import { InvestigationOverview } from './routes/InvestigationOverview';
 import { TimelineView } from './routes/TimelineView';
 import { AttackGraphView } from './routes/AttackGraphView';
@@ -15,14 +17,6 @@ import { EvidenceView } from './routes/EvidenceView';
 import { VerificationView } from './routes/VerificationView';
 import { ReportsView } from './routes/ReportsView';
 
-function PlaceholderView({ title }: { title: string }) {
-  return (
-    <div style={{ padding: '40px', color: 'var(--text-secondary)' }}>
-      <h2>{title}</h2>
-      <p>This view is under construction in Phase 1.</p>
-    </div>
-  );
-}
 
 function App() {
   return (
@@ -31,8 +25,8 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/cases" replace />} />
           <Route path="/cases" element={<CasesList />} />
-          <Route path="/evaluation" element={<PlaceholderView title="Evaluation" />} />
-          <Route path="/settings" element={<PlaceholderView title="Settings" />} />
+          <Route path="/evaluation" element={<EvaluationView />} />
+          <Route path="/settings" element={<SettingsView />} />
         </Route>
 
         <Route element={<InvestigationLayout />}>
