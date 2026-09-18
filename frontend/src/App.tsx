@@ -5,7 +5,15 @@ import { InvestigationLayout } from './layouts/InvestigationLayout';
 
 import { CasesList } from './routes/CasesList';
 import { InvestigationOverview } from './routes/InvestigationOverview';
+import { TimelineView } from './routes/TimelineView';
+import { AttackGraphView } from './routes/AttackGraphView';
+import { TelemetryView } from './routes/TelemetryView';
 import { AiAssistantView } from './routes/AiAssistantView';
+import { GapsView } from './routes/GapsView';
+import { CandidatesView } from './routes/CandidatesView';
+import { EvidenceView } from './routes/EvidenceView';
+import { VerificationView } from './routes/VerificationView';
+import { ReportsView } from './routes/ReportsView';
 
 function PlaceholderView({ title }: { title: string }) {
   return (
@@ -29,15 +37,15 @@ function App() {
 
         <Route element={<InvestigationLayout />}>
           <Route path="/cases/:caseId" element={<InvestigationOverview />} />
-          <Route path="/cases/:caseId/timeline" element={<PlaceholderView title="Timeline" />} />
-          <Route path="/cases/:caseId/graph" element={<PlaceholderView title="Attack Graph" />} />
-          <Route path="/cases/:caseId/telemetry" element={<PlaceholderView title="Telemetry" />} />
-          <Route path="/cases/:caseId/gaps" element={<PlaceholderView title="Gaps" />} />
-          <Route path="/cases/:caseId/candidates" element={<PlaceholderView title="Candidates" />} />
-          <Route path="/cases/:caseId/evidence" element={<PlaceholderView title="Evidence" />} />
-          <Route path="/cases/:caseId/verification" element={<PlaceholderView title="Verification" />} />
+          <Route path="/cases/:caseId/timeline" element={<TimelineView />} />
+          <Route path="/cases/:caseId/graph" element={<AttackGraphView />} />
+          <Route path="/cases/:caseId/telemetry" element={<TelemetryView />} />
+          <Route path="/cases/:caseId/gaps" element={<GapsView />} />
+          <Route path="/cases/:caseId/candidates" element={<CandidatesView />} />
+          <Route path="/cases/:caseId/evidence" element={<EvidenceView />} />
+          <Route path="/cases/:caseId/verification" element={<VerificationView />} />
           <Route path="/cases/:caseId/ai" element={<AiAssistantView />} />
-          <Route path="/cases/:caseId/report" element={<PlaceholderView title="Reports" />} />
+          <Route path="/cases/:caseId/report" element={<ReportsView />} />
         </Route>
       </Routes>
     </BrowserRouter>

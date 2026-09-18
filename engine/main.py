@@ -472,8 +472,11 @@ def get_llm_status():
             "error": str(e)
         }
 
+class ExplainRequest(BaseModel):
+    question: Optional[str] = None
+
 @app.post("/api/v1/investigations/{case_id}/ai/explain", summary="Generate advisory explanation using Local LLM")
-def explain_investigation(case_id: str):
+def explain_investigation(case_id: str, request: ExplainRequest = None):
     """
     Given a case_id (treated as scenario filename for now), run deterministic pipeline,
     build the evidence context, and query the local LLM for a structured advisory explanation.
@@ -506,7 +509,8 @@ def explain_investigation(case_id: str):
         if not status.get("available", False):
             raise HTTPException(status_code=503, detail="LLM_UNAVAILABLE: Configured model is missing or invalid.")
             
-        llm_response = provider.generate(ctx, "Explain the investigation outcome based solely on the provided context.")
+        question = request.question if (request and request.question) else "Explain the investigation outcome based solely on the provided context."
+        llm_response = provider.generate(ctx, question)
         
         guardrail = HallucinationGuardrail()
         validated_response = guardrail.validate(llm_response, ctx)

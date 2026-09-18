@@ -5,11 +5,17 @@ export interface CyberEvent {
   user_id: string | null;
   process_name: string | null;
   process_id: string | null;
+  parent_process_id?: string | null;
   event_type: string;
   source: string;
+  source_event_id?: string | null;
   technique_id: string | null;
   technique_name: string | null;
-  raw_data: Record<string, any>;
+  destination_host?: string | null;
+  destination_ip?: string | null;
+  metadata?: Record<string, any>;
+  raw_reference?: Record<string, any>;
+  raw_data?: Record<string, any>;
 }
 
 export interface DetectionSignals {
@@ -117,6 +123,12 @@ export interface FullPipelineResult {
   analysis_metadata?: AnalysisMetadata;
 }
 
+export interface GapWithCandidates {
+  gap: ReconstructionGap;
+  candidates: ReconstructionCandidate[];
+  analysis_metadata?: AnalysisMetadata;
+}
+
 export interface ScenarioMetadata {
   scenario_id: string;
   scenario_name: string;
@@ -124,6 +136,28 @@ export interface ScenarioMetadata {
   category: string;
   synthetic: boolean;
   event_count: number;
+}
+
+export interface LlmStatus {
+  enabled: boolean;
+  provider: string | null;
+  model_loaded: boolean;
+  model_version: string | null;
+  offline: boolean;
+  error?: string;
+  context_size?: number;
+  available?: boolean;
+}
+
+export interface StructuredLLMResponse {
+  summary: string;
+  assessment: string;
+  evidence_references: string[];
+  candidate_discussion: string[];
+  uncertainty: string;
+  recommended_next_checks: string[];
+  provider: string;
+  model_version: string;
 }
 
 const API_BASE = "http://127.0.0.1:8000/api/v1";
@@ -192,4 +226,52 @@ export async function runAnalysis(scenario: string, ranker_mode: string = "DETER
   const responseData = await response.json();
   console.log("RAW RESPONSE BODY", responseData);
   return responseData;
+}
+
+export async function getLlmStatus(): Promise<LlmStatus> {
+  const response = await fetch(`${API_BASE}/llm/status`);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.detail || `HTTP Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function explainInvestigation(scenario: string, question?: string): Promise<StructuredLLMResponse> {
+  const response = await fetch(`${API_BASE}/investigations/${scenario}/ai/explain`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question: question || null }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.detail || `HTTP Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function getGaps(scenario: string): Promise<ReconstructionGap[]> {
+  const response = await fetch(`${API_BASE}/gaps/detect`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ scenario }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.detail || `HTTP Error ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function getCandidates(scenario: string): Promise<GapWithCandidates[]> {
+  const response = await fetch(`${API_BASE}/reconstruction/candidates`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ scenario }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.detail || `HTTP Error ${response.status}`);
+  }
+  return response.json();
 }
