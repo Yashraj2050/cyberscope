@@ -10,7 +10,7 @@ export function InvestigationLayout() {
     { path: `/cases/${caseId}/timeline`, label: 'Timeline', icon: <Activity size={14} /> },
     { path: `/cases/${caseId}/graph`, label: 'Attack Graph', icon: <Network size={14} /> },
     { path: `/cases/${caseId}/telemetry`, label: 'Telemetry', icon: <List size={14} /> },
-    { path: `/cases/${caseId}/gaps`, label: 'Gaps', icon: <Search size={14} /> },
+    { path: `/cases/${caseId}/gaps`, label: 'Evidence Gaps', icon: <Search size={14} /> },
     { path: `/cases/${caseId}/candidates`, label: 'Candidates', icon: <List size={14} /> },
     { path: `/cases/${caseId}/evidence`, label: 'Evidence', icon: <FileText size={14} /> },
     { path: `/cases/${caseId}/verification`, label: 'Verification', icon: <CheckCircle size={14} /> },

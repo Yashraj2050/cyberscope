@@ -62,7 +62,7 @@ function VerificationCard({ result }: { result: FullPipelineResult }) {
           </div>
           <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
             {verifResult.status === 'INFERRED' && 'Event is reconstructed from supporting evidence (not directly observed).'}
-            {verifResult.status === 'UNKNOWN' && 'Evidence insufficient to establish the missing event.'}
+            {verifResult.status === 'UNKNOWN' && 'Evidence insufficient to establish the missing event. Supervisory review required.'}
             {verifResult.status === 'OBSERVED' && 'Event was directly observed in telemetry.'}
           </div>
         </div>
@@ -73,7 +73,7 @@ function VerificationCard({ result }: { result: FullPipelineResult }) {
             <div style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
               {verifResult.candidate_score !== null ? verifResult.candidate_score?.toFixed(4) : 'N/A'}
             </div>
-            <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Proposed Likelihood</div>
+            <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Evidence Support Score</div>
           </div>
           <div>
             <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>Verification Score</div>
@@ -90,6 +90,41 @@ function VerificationCard({ result }: { result: FullPipelineResult }) {
             <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Confidence Label</div>
           </div>
         </div>
+      </div>
+
+      <div style={{ display: 'flex' }}>
+
+        {/* Supervisory Review Status */}
+      </div>
+      <div style={{
+        padding: '14px 20px',
+        borderBottom: '1px solid var(--bg-tertiary)',
+        backgroundColor: verifResult.status === 'UNKNOWN' ? 'rgba(255, 159, 10, 0.06)' : 'rgba(52, 199, 89, 0.04)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <div>
+          <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+            Supervisory Review
+          </div>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: '600px' }}>
+            {verifResult.status === 'UNKNOWN'
+              ? 'Multiple candidates remain plausible, while available telemetry does not uniquely support one reconstruction.'
+              : 'The deterministic verification engine has established a classification based on available evidence.'}
+          </div>
+        </div>
+        <span style={{
+          padding: '4px 10px',
+          borderRadius: '4px',
+          fontSize: '10px',
+          fontWeight: 700,
+          letterSpacing: '0.5px',
+          backgroundColor: verifResult.status === 'UNKNOWN' ? 'rgba(255, 159, 10, 0.15)' : 'rgba(52, 199, 89, 0.1)',
+          color: verifResult.status === 'UNKNOWN' ? 'var(--status-gap)' : 'var(--status-pass)',
+        }}>
+          {verifResult.status === 'UNKNOWN' ? 'REQUIRED' : 'SUPPORTED BY AVAILABLE EVIDENCE'}
+        </span>
       </div>
 
       <div style={{ display: 'flex' }}>
@@ -271,13 +306,14 @@ export function VerificationView() {
         padding: '20px'
       }}>
         <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px', letterSpacing: '0.5px' }}>
-          Verification Engine Trust Boundary
+          Verification Engine — Supervisory Assessment Trust Boundary
         </div>
         <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-          The verification layer acts as the final arbiter for reconstruction. 
+          The verification layer acts as the final arbiter for reconstruction and the trust boundary for supervisory assessment.
           A high Candidate Score indicates that an event is a likely hypothesis, but it is <strong>not</strong> a probability, 
           and it does not prove the event occurred. The Verification Score evaluates the strength of actual 
-          surrounding evidence to establish the final classification.
+          surrounding evidence to establish the final classification. When evidence is insufficient, the system abstains
+          and flags the result for human supervisory review.
         </div>
       </div>
 

@@ -67,7 +67,7 @@ export function ReportsView() {
       {/* Header & Export Button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <h2 style={{ fontSize: '24px', fontWeight: 800, margin: '0 0 8px 0' }}>Investigation Report</h2>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, margin: '0 0 8px 0' }}>Supervisory Assessment Report</h2>
           <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
             Case: {scenarioId} • {analysis_metadata?.ml_inference_timestamp || new Date().toISOString()}
           </div>
@@ -94,10 +94,10 @@ export function ReportsView() {
           Report Integrity
         </div>
         <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <li>Analysis generated locally.</li>
-          <li>Evidence references come exclusively from observed telemetry.</li>
+          <li>Analysis generated locally — supports offline supervisory assessment.</li>
+          <li>Evidence references come exclusively from observed operational telemetry.</li>
           <li>Final classification is strictly determined by the deterministic verification engine.</li>
-          <li>AI Analyst (if used) does not alter the final decision.</li>
+          <li>AI Analyst (if used) provides explanation only and does not alter the final decision.</li>
         </ul>
       </div>
 
@@ -112,9 +112,14 @@ export function ReportsView() {
               {result.status}
             </div>
             {result.status === 'UNKNOWN' && (
-              <div style={{ fontSize: '13px', color: 'var(--status-gap)', marginTop: '8px', fontWeight: 600 }}>
-                Evidence insufficient to establish the missing event.
-              </div>
+              <>
+                <div style={{ fontSize: '13px', color: 'var(--status-gap)', marginTop: '8px', fontWeight: 600 }}>
+                  Evidence insufficient to establish the missing event.
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--status-gap)', marginTop: '6px', padding: '6px 10px', backgroundColor: 'rgba(255, 159, 10, 0.08)', borderRadius: '4px', fontWeight: 600 }}>
+                  SUPERVISORY REVIEW: REQUIRED
+                </div>
+              </>
             )}
             {result.status === 'INFERRED' && (
               <div style={{ fontSize: '13px', color: 'var(--status-pass)', marginTop: '8px' }}>
@@ -137,7 +142,7 @@ export function ReportsView() {
 
         {/* GAP ANALYSIS */}
         <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '20px', borderRadius: '8px', border: '1px solid var(--bg-tertiary)' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 700, margin: '0 0 16px 0', color: 'var(--text-primary)' }}>GAP ANALYSIS</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 700, margin: '0 0 16px 0', color: 'var(--text-primary)' }}>EVIDENCE GAP ANALYSIS</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
             <div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Gap ID</div>

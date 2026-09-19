@@ -125,7 +125,7 @@ function GapCard({ gap }: { gap: ReconstructionGap }) {
               backgroundColor: isDetected ? 'rgba(255, 159, 10, 0.15)' : 'rgba(52, 199, 89, 0.1)',
               color: isDetected ? 'var(--status-gap)' : 'var(--status-pass)',
             }}>
-              {isDetected ? 'GAP DETECTED' : 'NO GAP DETECTED'}
+              {isDetected ? 'EVIDENCE GAP DETECTED' : 'NO EVIDENCE GAP'}
             </span>
           </div>
           <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
@@ -167,7 +167,7 @@ function GapCard({ gap }: { gap: ReconstructionGap }) {
 
           {/* Arrow */}
           <div style={{ textAlign: 'center', color: isDetected ? 'var(--status-gap)' : 'var(--text-muted)', fontSize: '16px', margin: '4px 0' }}>
-            ↓ {isDetected && <span style={{ fontSize: '11px' }}>GAP</span>} ↓
+            ↓ {isDetected && <span style={{ fontSize: '11px' }}>EVIDENCE GAP</span>} ↓
           </div>
 
           {/* Following */}
@@ -242,7 +242,7 @@ function GapCard({ gap }: { gap: ReconstructionGap }) {
           backgroundColor: 'rgba(255, 159, 10, 0.03)',
         }}>
           <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--status-gap)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
-            Why This Gap Was Detected
+            Why This Evidence Gap Was Detected
           </div>
           <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
             {buildExplanation(gap)}
@@ -314,7 +314,7 @@ export function GapsView() {
           animation: 'spin 1s linear infinite',
         }} />
         <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-          Running gap detection on observed telemetry...
+          Running evidence-gap detection on operational telemetry...
         </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
@@ -369,7 +369,7 @@ export function GapsView() {
         <div style={{ width: '1px', backgroundColor: 'var(--bg-tertiary)' }} />
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
-            Gaps Detected
+            Evidence Gaps Detected
           </div>
           <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: 'var(--font-mono)', color: detectedGaps.length > 0 ? 'var(--status-gap)' : 'var(--status-pass)' }}>
             {detectedGaps.length}
@@ -393,11 +393,25 @@ export function GapsView() {
         </div>
       </div>
 
-      {/* Gap Cards */}
+      {/* Explanatory subtitle */}
+      <div style={{
+        padding: '12px 16px',
+        backgroundColor: 'rgba(100, 210, 255, 0.04)',
+        border: '1px solid rgba(100, 210, 255, 0.15)',
+        borderRadius: '6px',
+        fontSize: '12px',
+        color: 'var(--text-secondary)',
+        lineHeight: 1.5,
+      }}>
+        <strong style={{ color: 'var(--accent-cyan)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Operational Evidence Gap Analysis</strong>
+        <div style={{ marginTop: '4px' }}>A discontinuity in available operational evidence requiring further human review. A detected gap does not prove that an attack occurred — it identifies where the evidence is incomplete.</div>
+      </div>
+
+      {/* Evidence Gap Cards */}
       {detectedGaps.length > 0 && (
         <div>
           <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--status-gap)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
-            Detected Gaps ({detectedGaps.length})
+            Detected Evidence Gaps ({detectedGaps.length})
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {detectedGaps.map((gap) => (
