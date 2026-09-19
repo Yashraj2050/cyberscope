@@ -19,7 +19,7 @@ export function InvestigationLayout() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* INVESTIGATION HEADER */}
       <header className="topbar" style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 24px' }}>
         <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '16px' }}>
