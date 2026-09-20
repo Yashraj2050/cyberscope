@@ -319,7 +319,7 @@ export function TelemetryView() {
                           <td colSpan={7} style={{ padding: '20px 40px' }}>
                             
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                              <div>
+                              <div style={{ minWidth: 0 }}>
                                 <h4 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Event Details</h4>
                                 <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
                                   <tbody>
@@ -361,15 +361,15 @@ export function TelemetryView() {
                                 </table>
                               </div>
 
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                <div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
+                                <div style={{ minWidth: 0 }}>
                                   <h4 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Parsed Metadata</h4>
                                   <pre style={{ margin: 0, padding: '12px', backgroundColor: 'var(--bg-primary)', borderRadius: '6px', fontSize: '11px', color: 'var(--text-secondary)', border: '1px solid var(--bg-tertiary)', overflowX: 'auto' }}>
                                     {JSON.stringify(e.metadata || {}, null, 2)}
                                   </pre>
                                 </div>
                                 {e.raw_reference && (
-                                  <div>
+                                  <div style={{ minWidth: 0 }}>
                                     <h4 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Raw Reference Data</h4>
                                     <pre style={{ margin: 0, padding: '12px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '6px', fontSize: '11px', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', overflowX: 'auto' }}>
                                       {JSON.stringify(e.raw_reference, null, 2)}
